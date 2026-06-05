@@ -12,18 +12,35 @@ public class Assignment3 {
         System.out.println("==========================================================================");
     }
 
+    public static int getChoice() {
+        System.out.println("메뉴를 선택하세요.");
+
+        Scanner sc = new Scanner(System.in);
+        int choice = sc.nextInt();
+
+        return choice;
+    }
+
+    public static int getMoney() {
+        System.out.println("돈을 넣어주세요.");
+
+        Scanner sc = new Scanner(System.in);
+        int money = sc.nextInt();
+
+        return money;
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("돈을 넣어주세요.");
-        int totalMoney = sc.nextInt();
+
         boolean isRunning = true;
+        int totalMoney = getMoney();
 
         printMenu(totalMoney);
 
         while (isRunning) {
-            System.out.println("메뉴를 선택하세요.");
-            int choice = sc.nextInt();
+            int choice = getChoice();
 
             switch(choice) {
                 case 1:
