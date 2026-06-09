@@ -16,8 +16,10 @@
 // {}블럭을 벗어나면 소멸되어 사용할 수 없게 된다.
 
 class Card {
+    // 1. 인스턴스 변수 (개인용): 카드마다 다름
     String kind;
     int number;
+    // 2. 클래스 변수 (공통/static): 모든 카드가 똑같음
     static int width = 100;
     static int height = 150;
 }
