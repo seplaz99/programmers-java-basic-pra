@@ -60,7 +60,7 @@ public class F_constructor {
 
         // 생성자에서 다른 생성자 호출하기 -> this
         // 생서자의 이름으로 클래스 대신 This 사용
-        // 한 생성자에서 다른 생성자를 호출할 때는 바늗시 첫 줄에서만 호출이 가능하다.
+        // 한 생성자에서 다른 생성자를 호출할 때는 바늗시 첫 줄에서만 호출이 가능하다. -> Java 옛날버전
         F_person5  f_person5 = new F_person5();
         f_person5.display();
     }

@@ -24,9 +24,35 @@
 // 오버라이딩을 통해 자식 클래스는 부모 클래스의 기본 기능을 유지하면서도,
 // 자신만의 방식으로 그 기능을 수정하거나 확장할 수 있다.
 
+// 오버라이딩 조건
+// 자식 클래스에서 오버라이딩하는 메서드는 부모 클래스의 메서드와
+// 이름이 같아야 한다.
+// ㅁ매개변수가 같아야 한다.
+
+// 단, 접근 제어자(public, protected, private)와 예외는 제한된 조건하에서만 다르게 변경할 수 있다.
+// 1. 접근 제어자는 조상 클래스의 메서드보다 좁은 범위로 변경할 수 없다.
+// 만일 부모 클래스에 정의된 메서드의 접근 제어자가 protected라면,
+// 이를 오버라이딩하는 자식 클래스의 메서드는 접근 제어자가 protected나 public이어야 한다.
+// 접근 제어자의 접근범위를 넓은 것에서 좁은 것 순으로 나열하면
+// public, protected, (default), private
+// 2. 조상 클래스의 메서드보다 많은 수의 예외를 선언할 수 없다.
+
+
 public class G_inheritance {
 
     public static void main(String[] args) {
+        G_dog dog = new G_dog();
+        dog.kind = "korean dog";
+        dog.eat();
+        dog.walk(); // 재정의한 walk, overriding
+        dog.bark();  // 확장
+
+        G_bird bird = new G_bird();
+        bird.kind = "bird";
+        bird.wing = "wing";
+        bird.eat();
+        bird.walk();
+        bird.fly();
 
     }
 }
