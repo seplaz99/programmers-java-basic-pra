@@ -1,9 +1,7 @@
-package vendingmachine;
+package vendingmachine_abstract;
 
 // 자판기 클래스
 // 현재 금액과 판매 음료들을 관리한다.
-
-import java.util.Scanner;
 
 public class VendingMachine {
 

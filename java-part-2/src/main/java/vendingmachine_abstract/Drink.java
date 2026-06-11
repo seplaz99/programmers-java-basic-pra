@@ -1,4 +1,4 @@
-package vendingmachine;
+package vendingmachine_abstract;
 
 // 모든 음료의 공통 틀
 // 이름, 가격

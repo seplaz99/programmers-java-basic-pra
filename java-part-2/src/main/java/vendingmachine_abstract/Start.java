@@ -1,4 +1,4 @@
-package vendingmachine;
+package vendingmachine_abstract;
 
 import java.util.Scanner;
 

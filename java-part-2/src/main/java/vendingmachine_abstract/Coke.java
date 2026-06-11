@@ -1,4 +1,4 @@
-package vendingmachine;
+package vendingmachine_abstract;
 
 public class Coke extends Drink{
     // 부모 클래스의 생성자를 초기화 시켜줘야함

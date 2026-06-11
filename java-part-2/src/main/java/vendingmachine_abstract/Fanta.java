@@ -1,4 +1,4 @@
-package vendingmachine;
+package vendingmachine_abstract;
 
 public class Fanta extends Drink{
 
