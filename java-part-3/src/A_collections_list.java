@@ -30,7 +30,146 @@
 // 마지막 노드에는 주소값 null
 // x001 (자기 주소) : prev null(전 노드의 주소) : a : x004(다음 노드의 주소)
 
+import javax.swing.plaf.SplitPaneUI;
+import java.util.*;
+
 public class A_collections_list {
+    // 1. ArrayList
+    public void exam1() {
+        List<String> list = new ArrayList<>();
+
+        // 요소 추가
+        list.add("apple");
+        list.add("banana");
+        list.add("orange");
+        list.add("grape");
+        list.add("watermelon");
+
+        // 특정 인덱스에 요소 추가
+        list.add(1, "lemon");
+
+        // 리스트의 크기 확인
+        System.out.println("List size : " + list.size());
+
+        // 인덱스를 사용하여 요소 접근
+        System.out.println("Apple : " + list.get(0));
+
+        // 요소 제거
+        list.remove(2);
+
+        // 특정 요소가 리스트에 포함되어 있는지 확인
+        if (list.contains("banana")) {
+            System.out.println("banana contains list");
+        }
+
+        // 순회 방법 1 : for 루프 사용
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(list.get(i));
+        }
+
+        // 순회 방법 2 : 향상된 for 문
+        for (String fruit : list) {
+            System.out.println(fruit);
+        }
+
+        // 순회 방법 3 : iterator 사용
+        Iterator<String> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            String element = iterator.next();
+            System.out.println(element);
+        }
+
+        // 순회 방법 4 : ListIterator 사용 (양방향 순회 가능)
+        ListIterator<String> listIterator = list.listIterator();
+        // 정방향
+        while (listIterator.hasNext()) {
+            String element = listIterator.next();
+            System.out.println(element);
+        }
+
+        //역방향
+        while (listIterator.hasPrevious()) {
+            String element = listIterator.previous();
+            System.out.println(element);
+        }
+
+        // 리스트의 모든 요소 제거
+        list.clear();
+    }
+
+    // 2. LinkedList
+    public void exam2() {
+        List<String> list = new LinkedList<>();
+
+        list.add("apple");
+        list.add("banana");
+        list.add("orange");
+        list.add("grape");
+        list.add("watermelon");
+
+        list.removeLast();
+
+        System.out.println(list.get(0));
+
+        // 순회 방법 1 : for 루프 사용
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(list.get(i));
+        }
+
+        // 순회 방법 2 : 향상된 for 문
+        for (String fruit : list) {
+            System.out.println(fruit);
+        }
+
+        // 순회 방법 3 : iterator 사용
+        Iterator<String> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            String element = iterator.next();
+            System.out.println(element);
+        }
+
+        // 순회 방법 4 : ListIterator 사용 (양방향 순회 가능)
+        ListIterator<String> listIterator = list.listIterator();
+        // 정방향
+        while (listIterator.hasNext()) {
+            String element = listIterator.next();
+            System.out.println(element);
+        }
+
+        //역방향
+        while (listIterator.hasPrevious()) {
+            String element = listIterator.previous();
+            System.out.println(element);
+        }
+    }
+
+    // 3. stack
+    // LIFO(Last In First Out) 후입선출 구조를 따른다.
+    // Vector 기반 : Stack은 Vactor 클래스를 상속받아 구현되어있다.
+    // 주요 메서드 : push() 요소 삽입, pop() 요소 제거, peek() 맨 위 요소 확인, empty() stack이 비어 있는지 확인
+    public void exam3() {
+        Stack<String> stack = new Stack<>();
+
+        // push
+        stack.push("apple");
+        stack.push("banana");
+
+        // pop
+        String topElement = stack.pop();
+        System.out.println("topElement : " + topElement);
+
+        // peek
+        String peekElement = stack.peek();
+        System.out.println("peekElement : " + peekElement);
+
+        // empty
+        boolean isEmpty = stack.empty();
+        System.out.println("isEmpty : " + isEmpty);
+    }
+
+    public static void main(String[] args) {
+
+    }
 }
 
 
