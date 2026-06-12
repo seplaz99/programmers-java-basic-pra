@@ -165,6 +165,40 @@ public class A_collections_list {
         // empty
         boolean isEmpty = stack.empty();
         System.out.println("isEmpty : " + isEmpty);
+
+        // 순회 방법 1 : for 루프 사용
+        for (int i = 0; i < stack.size(); i++) {
+            System.out.println(stack.get(i));
+        }
+
+        // 순회 방법 2 : 향상된 for 루프 사용
+        for (String element : stack) {
+            System.out.println("element : " + element);
+        }
+
+        // 순회 방법 3 : iterator 사용
+        Iterator<String> iterator = stack.iterator();
+        while (iterator.hasNext()) {
+            String element = iterator.next();
+            System.out.println("element : " + element);
+        }
+
+        // 순회 방법 4 : ListIterator 사용
+        ListIterator<String> listIterator = stack.listIterator();
+        while(listIterator.hasNext()) {
+            String element =  listIterator.next();
+            System.out.println("element : " + element);
+        }
+        while(listIterator.hasPrevious()) {
+            String element = listIterator.previous();
+            System.out.println("element : " + element);
+        }
+
+        // 순회 방법 5 : pop()을 사용한 순회 (스택의 특성 활용)
+        while (!stack.isEmpty()) {
+            String element = stack.pop();
+            System.out.println("element : " + element);
+        }
     }
 
     public static void main(String[] args) {
