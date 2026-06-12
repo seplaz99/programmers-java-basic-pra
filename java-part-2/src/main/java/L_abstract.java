@@ -48,6 +48,7 @@ class L_dog extends L_animal {
     void makeSound() {
         System.out.println("dog sound");
     }
+    // 추상 클래스에서 생성자가 있다면 이것 또한 강제적으로 자식 클래스에서 같이 구현해줘야함
 }
 
 class L_cat extends L_animal {
