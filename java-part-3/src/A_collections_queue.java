@@ -169,6 +169,36 @@ public class A_collections_queue {
         };
     }
 
+    // 3. ArrayDeque
+    // ArrayDequeue : 양방향 큐로 사용할 수 있다.
+    public static void exam3() {
+        ArrayDeque<String> arrayDeque = new ArrayDeque<>();
+
+        // 요소 추가
+        arrayDeque.add("Apple");
+        arrayDeque.add("Banana");
+        arrayDeque.add("Orange");
+
+        // 큐의 맨 앞 요소 확인 (제거하지 않음)
+        System.out.println("Peek: " + arrayDeque.peek());  // 출력: Apple
+
+        // 큐에서 요소 제거 및 반환
+        System.out.println("Poll: " + arrayDeque.poll());  // 출력: Apple
+
+        // 큐에서 요소 제거 및 반환
+        System.out.println("Poll: " + arrayDeque.poll());  // 출력: Banana
+
+        // 큐의 맨 앞 요소 확인 (제거하지 않음)
+        System.out.println("Peek: " + arrayDeque.peek());  // 출력: Orange
+
+        // 큐의 크기 확인
+        System.out.println("Queue size: " + arrayDeque.size());  // 출력: 1
+
+        // 큐 비우기
+        arrayDeque.clear();
+        System.out.println("Queue is empty: " + arrayDeque.isEmpty());  // 출력: true
+    }
+
     public static void main(String[] args) {
 
     }
