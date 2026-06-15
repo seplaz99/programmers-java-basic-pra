@@ -21,6 +21,7 @@ public class MyHashMap {
     }
 
     int getIndex(String key) {
+        if (key == null) return 0;
         int hash = key.hashCode();
         if (hash < 0) {
             hash = -hash;
@@ -43,6 +44,11 @@ public class MyHashMap {
 
         Node node = new Node(key, value);
         node.next = head;
+
+        if (head != null) {
+            head.prev = node;
+        }
+
         buckets[index] = node;
         size++;
     }
@@ -73,15 +79,19 @@ public class MyHashMap {
 
         for (Node n = head; n != null; n = n.next) {
             if (n.key.equals(key)) {
-                Node prev = n.prev;
-                if (prev == null) {
+                if (n.prev == null) {
                     buckets[index] = n.next;
                 } else {
-                    prev.next = n.next;
+                    n.prev.next = n.next;
                 }
+
+                if (n.next != null) {
+                    n.next.prev = n.prev;
+                }
+
+                size--;
+                return;
             }
         }
-
-        size--;
     }
 }
