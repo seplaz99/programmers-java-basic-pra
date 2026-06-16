@@ -22,7 +22,7 @@ public class Graph {
     }
 
     public void printGraph() {
-        for (int i = 0; i < adjacencyList.length; i++) {
+        for (int i = 1; i < adjacencyList.length; i++) {
             System.out.println("Vertex " + i + ": " + adjacencyList[i]);
         }
     }
