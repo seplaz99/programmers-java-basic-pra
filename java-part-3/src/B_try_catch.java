@@ -11,6 +11,9 @@
 //  •  catch: try에서 예외가 발생하면 그 예외를 잡아 처리하는 블록이다.
 //  •  finally: 예외 발생 여부와 상관없이 항상 실행되는 블록이다. (주로 자원 정리에 사용)
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public class B_try_catch {
 
     // 1. 기본 try-catch
@@ -57,7 +60,75 @@ public class B_try_catch {
         }
     }
 
+    // 3. finally
+    // finally 블록은 예외가 발생하든 안 하든, try/catch가 끝나면 "항상" 실행된다.
+    // 파일 닫기, 연결 해제 등 반드시 처리해야 하는 마무리 작업에 사용한다.
+    public static void exam3() {
+        try {
+            System.out.println("try 블록 실행");
+            int result = 10 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("catch 블록 실행");
+        } finally {
+            // 예외가 발생해도, 발생하지 않아도 항상 실행되는 블록
+            System.out.println("finally 블록은 항상 실행됩니다.");
+        }
+    }
+
+    // 4. throw / throws
+    // 19세 체크
+    private void checkAge(int age) {
+        if (age < 19) {
+            throw new IllegalArgumentException("미성년자는 가입할 수 없습니다.");
+        }
+        System.out.println("가입이 가능한 나이입니다.");
+    }
+
+    public static void exam4() {
+        try {
+            B_try_catch tryCatch = new B_try_catch();
+            tryCatch.checkAge(17);
+        } catch (IllegalArgumentException e) {
+            System.out.println("나이 검증 실패 : " + e.getMessage());
+        }
+    }
+
+    // 5. try-with-resource
+    // try( ... ) 괄호 안에서 자원(스트림 등)을 선언하면, try 블록이 끝날 때 자동으로 close()가 호출된다.
+    // AutoCloseable 인터페이스를 구현한 객체만 사용할 수 있다. (대부분의 입출력 스트림이 해당)
+    // finally에서 직접 close()를 호출하지 않아도 되므로 코드가 간결하고, 자원 해제 누락을 막을 수 있다.
+    public static void exam5() {
+        try (FileInputStream fis = new FileInputStream("example.txt")) {
+            int data = fis.read();
+            System.out.println("읽은 데이터 : " + data);
+        } catch (IOException e) {
+            System.out.println("입출력 예외 처리 : " + e.getMessage());
+        }
+        // 위 try가 끝나면(정상이든 예외든) fis.close()가 자동 호출
+    }
+
+    public static void exam6() {
+        FileInputStream fis = null;
+
+        try {
+            fis = new FileInputStream("example.txt");
+            int data = fis.read();
+            System.out.println("읽은 데이터 : " + data);
+        } catch (IOException e) {
+            System.out.println("파일 처리 중 예외 발생 : " + e.getMessage());
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        exam2_2();
+        exam4();
+        exam6();
     }
 }
