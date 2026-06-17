@@ -45,4 +45,11 @@ class Car implements Runnable {
 }
 
 public class C_thread_6_sum {
+
+    public static void main(String[] args) {
+        // 차 6대가 한꺼번에 주차 시도
+        for (int i = 1; i <= 6; i++) {
+            new Thread(new Car("Car-" + i)).start();
+        }
+    }
 }
