@@ -9,16 +9,16 @@
 // Writer, Reader
 // -> 스트림 사용 후 반드시 close()로 자원을 해제해야한다. -> try-with-resources 구문을 사용하면 자동으로 자원을 해제할 수 있다.
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
+import com.google.zxing.*;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -162,8 +162,111 @@ public class E_input_output_stream {
         }
     }
 
+    // 2-2. 파일에 내용 쓰기 - 문자
+    // exam2()는 바이트 스트림(FileOutputStream)이라 문자열을 getBytes()로 byte 배열로 바꿔서 써야 했다.
+    // 문자 스트림(FileWriter)은 문자(char) 단위로 처리하므로 String을 그대로 write()에 넘길 수 있다. (byte 변환 불필요)
+    // 그래서 텍스트 파일을 다룰 때는 문자 스트림이 더 간편하다.
+    public void exam2_2() {
+        today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        todayFile = myFolder.resolve(today + "_writer.txt");
+
+        if (Files.notExists(todayFile)) {
+            try ( FileWriter fw = new FileWriter(todayFile.toFile()) ) {
+
+                String content = "Hello World!";
+                fw.write(content);
+                System.out.println("파일을 생성하고 내용을 썼습니다.");
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println(today + "_writer.txt 파일이 이미 존재합니다.");
+        }
+    }
+
+    // 3. 파일 내용 읽기 <-> exam2()의 짝
+    // FileInputStream으로 파일을 1바이트 단위로 읽어 들인다.
+    // 읽은 byte 배열을 new String(...)으로 다시 문자열로 변환해야 사람이 읽을 수 있다.
+    public void exam3() {
+        today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        todayFile = myFolder.resolve(today + ".txt");
+
+        if (Files.exists(todayFile)) {
+            try (FileInputStream fis = new FileInputStream(todayFile.toFile())) {
+                byte[] bytes = fis.readAllBytes();
+                String content = new String(bytes);
+
+                System.out.println("내용 : " + content);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println("오늘 날짜의 파일이 존재하지 않습니다.");
+        }
+    }
+
+    // 3-1. QR코드 이미지 읽기
+    // 저장된 PNG를 BufferedImage로 읽고, ZXing으로 다시 문자열을 추출(decode)한다.
+    // 쓰기(encode)의 반대 과정이다: 문자열 → 이미지 였다면, 여기선 이미지 → 문자열.
+    public void exam3_1() {
+        today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        todayFile = myFolder.resolve(today + ".png");
+
+        if (Files.exists(todayFile)) {
+            try {
+                // 1) ImageIO.read(...) : PNG 파일을 BufferedImage(이미지 객체)로 읽어온다
+                BufferedImage image = ImageIO.read(todayFile.toFile());
+
+                // 2) 이미지를 ZXing이 해석할 수 있는 형태(BinaryBitmap)로 변환
+                LuminanceSource source = new BufferedImageLuminanceSource(image);
+                BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+                // 3) MultiFormatReader.decode(...) : 비트맵에서 QR코드 내용을 추출
+                Result result = new MultiFormatReader().decode(bitmap);
+                System.out.println("QR코드 내용 : " + result.getText());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (NotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println("오늘 날짜의 파일이 존재하지 않습니다.");
+        }
+    }
+
+    // 3-2. 파일 내용 읽기 문자 스트림
+    // FileReader로 파일을 문자(char) 단위로 읽는다.
+    // 바이트 스트림과 달리 byte → String 변환이 필요 없다.
+    // 보통 BufferedReader로 감싸 한 줄씩(readLine) 편하게 읽는다.
+    public void exam3_2() {
+        today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        todayFile = myFolder.resolve(today + "_writer.txt");
+
+        if (Files.exists(todayFile)) {
+            // FileReader(문자 스트림)를 BufferedReader로 감싸 줄 단위로 읽는다
+            try (BufferedReader br = new BufferedReader(new FileReader(todayFile.toFile()))) {
+                String line;
+                StringBuilder sb = new StringBuilder();
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+
+                System.out.println("내용 : " + sb.toString());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println("오늘 날짜의 파일이 존재하지 않습니다.");
+        }
+    }
+
+
     public static void main(String[] args) {
         E_input_output_stream e = new E_input_output_stream();
-        e.exam2_1();
+        e.exam3_2();
     }
 }
