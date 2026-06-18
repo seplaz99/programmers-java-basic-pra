@@ -30,7 +30,6 @@
 // 마지막 노드에는 주소값 null
 // x001 (자기 주소) : prev null(전 노드의 주소) : a : x004(다음 노드의 주소)
 
-import javax.swing.plaf.SplitPaneUI;
 import java.util.*;
 
 public class A_collections_list {
