@@ -9,6 +9,12 @@
 // Writer, Reader
 // -> 스트림 사용 후 반드시 close()로 자원을 해제해야한다. -> try-with-resources 구문을 사용하면 자동으로 자원을 해제할 수 있다.
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -127,11 +133,37 @@ public class E_input_output_stream {
     // exam2()처럼 텍스트가 아니라 이미지라서, 문자 스트림으로는 다룰 수 없는 대표 예시다.
     // ZXing 라이브러리로 문자열을 QR코드 행렬(BitMatrix)로 만든 뒤 PNG 파일로 저장한다.
     public void exam2_1() {
+        today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        todayFile = myFolder.resolve(today + ".png");
 
+        // QR 코드에 담을 내용 (URL, 텍스트 등 무엇이든 가능)
+        String content = "https://programmers.co.kr";
+
+        if (Files.notExists(todayFile)) {
+            try {
+                // 1) QRCodeWriter.encode(...) : 문자열을 QR코드 행렬(BitMatrix)로 변환
+                // 인자: 내용, 포맷(QR_CODE), 가로 크기, 세로 크기(픽셀)
+                QRCodeWriter writer = new QRCodeWriter();
+                BitMatrix matrix = writer.encode(content, BarcodeFormat.QR_CODE, 300, 300);
+                // 2) MatrixToImageWriter.writeToPath(...) : 행렬을 실제 PNG 이미지 파일로 저장
+                // 내부적으로 ImageIO(바이트 스트림)를 이용해 바이너리로 기록한다
+                MatrixToImageWriter.writeToPath(matrix, "PNG", todayFile);
+
+                System.out.println(today + "QR코드 이미지를 생성했습니다.");
+            } catch (WriterException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        } else {
+            System.out.println(today + ".png 파일이 이미 존재합니다.");
+        }
     }
 
     public static void main(String[] args) {
         E_input_output_stream e = new E_input_output_stream();
-        e.exam2();
+        e.exam2_1();
     }
 }
