@@ -1,4 +1,4 @@
-package accountbook;
+package accountbookiostream;
 
 public interface AccountBook {
     void addAccount();

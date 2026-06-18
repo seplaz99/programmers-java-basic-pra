@@ -1,4 +1,4 @@
-package accountbook;
+package accountbookiostream;
 
 import java.util.Scanner;
 
@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc =  new Scanner(System.in);
         AccountBookImpl accountBook = new AccountBookImpl(sc);
+        accountBook.load();
 
         while (true){
             System.out.println("===== 가계부 =====");
@@ -39,8 +40,5 @@ public class Main {
                     System.out.println("잘못된 선택입니다. 다시 시도하세요.");
             }
         }
-
-
-
     }
 }

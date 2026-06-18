@@ -1,4 +1,4 @@
-package accountbook;
+package accountbookiostream;
 
 public class Item {
     private String name;
@@ -15,5 +15,9 @@ public class Item {
 
     public int getPrice() {
         return price;
+    }
+
+    public String toFileString() {
+        return getName() + "," + getPrice();
     }
 }

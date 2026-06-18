@@ -1,13 +1,57 @@
-package accountbook;
+package accountbookiostream;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class AccountBookImpl implements AccountBook {
     private Map<String, List<Item>> data = new HashMap<>();
     private Scanner sc;
+    private static final String FILE = "accountbook.txt";
 
     public AccountBookImpl(Scanner sc) {
         this.sc = sc;
+    }
+
+    public void save() {
+        try (FileWriter fw = new FileWriter(FILE)) {
+            for (Map.Entry<String, List<Item>> entry : data.entrySet()) {
+                for (Item item : entry.getValue()) {
+                    fw.write(entry.getKey() + "," + item.toFileString() + "\n");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("저장 오류 : " + e.getMessage());
+        }
+    }
+
+    public void load() {
+        File file = new File(FILE);
+        if (!file.exists()) return;
+
+        data.clear();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.isBlank()) continue;
+
+                String[] p = line.split(",");
+                if(p.length < 3) continue;
+
+                String date = p[0];
+                String name = p[1];
+                int price = Integer.parseInt(p[2].trim());
+
+                List<Item> list = data.getOrDefault(date, new ArrayList<>());
+                list.add(new Item(name, price));
+
+                data.put(date, list);
+            }
+        } catch (IOException e) {
+            System.out.println("불러오기 오류 : " + e.getMessage());
+        }
     }
 
     // 1. 내역 추가
@@ -39,6 +83,7 @@ public class AccountBookImpl implements AccountBook {
         data.put(date, list);
         System.out.println("[" + date + "] 내역이 추가되었습니다.");
         printItem(data.get(date));
+        save();
     }
 
     // 2. 내역 조회
@@ -65,6 +110,7 @@ public class AccountBookImpl implements AccountBook {
 
         System.out.println("[" + date + "] 내역:");
         printItem(data.get(date));
+        save();
     }
 
     // 3. 해당 날짜의 모든 내역 삭제
@@ -79,6 +125,7 @@ public class AccountBookImpl implements AccountBook {
 
         data.remove(date);
         System.out.println("[" + date + "] 내역이 삭제되었습니다.");
+        save();
     }
 
     // 4. 해당 날짜의 특정 내역 삭제
@@ -106,6 +153,7 @@ public class AccountBookImpl implements AccountBook {
 
         Item removedItem = items.remove(index);
         System.out.println("[" + date + "] 내역에서 '" + removedItem.getName() + "'이 삭제되었습니다.");
+        save();
 
         // 만약 해당 날짜의 내역이 비어있다면, 맵에서 제거
         if (items.isEmpty()) {
