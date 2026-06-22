@@ -22,7 +22,7 @@ import org.example.springtheory.ch01.ex1_1.domain.User;
 import java.sql.SQLException;
 
 public class Start {
-    static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
         UserDAO dao = new UserDAO();
 
