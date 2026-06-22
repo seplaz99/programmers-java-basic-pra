@@ -1,7 +1,6 @@
 import java.sql.*;
 
 public class A_jdbc {
-
     public Connection connection() {
 
         String url = "jdbc:mysql://localhost:3306/java_basic";
@@ -138,13 +137,13 @@ public class A_jdbc {
 
     }
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         A_jdbc aJdbc = new A_jdbc();
-//        aJdbc.insertData("홍길순", 21, "010-1234-5678");
+        aJdbc.insertData("홍길순", 21, "010-1234-5678");
         aJdbc.selectAll();
-//        aJdbc.selectOne(1);
-//        aJdbc.updateData(2, "홍홍홍", 30, "010-3232-4545");
-//        aJdbc.deleteData(2);
+        // aJdbc.selectOne(1);
+        // aJdbc.updateData(2, "홍홍홍", 30, "010-3232-4545");
+        // aJdbc.deleteData(2);
     }
 
 }
