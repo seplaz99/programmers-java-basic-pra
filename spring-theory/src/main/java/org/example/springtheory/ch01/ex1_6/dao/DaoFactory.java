@@ -12,7 +12,7 @@ public class DaoFactory {
     // 오브젝트 생성을 담당하는 IoC용 메서드라는 표시
     @Bean
     public UserDAO userDAO() {
-        return new UserDAO(connectionMaker());
+        return UserDAO.getInstance(connectionMaker());
     }
 
     @Bean
