@@ -52,4 +52,29 @@ public class UserDAO {
         }
 
     }
+
+    // 테스트 시작전에 호출해 DB를 깨씃한 상태로 만드는 용도
+    public void deleteAll() throws SQLException, ClassNotFoundException {
+        String query = "DELETE FROM users";
+
+        try (
+                Connection conn = simpleConnectionMaker.makeNewConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+        ) {
+            pstmt.executeUpdate();
+        }
+    }
+
+    public int getCount() throws ClassNotFoundException, SQLException {
+        String query = "SELECT COUNT(*) FROM users";
+
+        try (
+                Connection conn = simpleConnectionMaker.makeNewConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                ResultSet resultSet = pstmt.executeQuery();
+        ) {
+            resultSet.next();
+            return resultSet.getInt(1);
+        }
+    }
 }
