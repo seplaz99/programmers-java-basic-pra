@@ -1,7 +1,10 @@
 package org.example.springtheory.ch05.ex5_1.dao;
 
+import org.example.springtheory.ch05.ex5_1.domain.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 // 익명 내부 클래스
@@ -14,6 +17,18 @@ public class UserDAO {
     }
 
     protected UserDAO() {}
+
+    private RowMapper<User> userRowMapper = new RowMapper<>() {
+        @Override
+        public User mapRow(ResultSet rs) throws SQLException {
+            User user = new User();
+            user.setId(rs.getString("id"));
+            user.setName(rs.getString("name"));
+            user.setPassword(rs.getString("password"));
+            user.setLevel(rs.get);
+            return null;
+        }
+    }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
 
