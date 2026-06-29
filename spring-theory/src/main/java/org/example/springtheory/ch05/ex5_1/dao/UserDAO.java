@@ -118,7 +118,7 @@ public class UserDAO {
         });
     }
 
-    public void uqdate(User user) throws SQLException, ClassNotFoundException {
+    public void update(User user) throws SQLException, ClassNotFoundException {
         StatementStrategy strategy = new StatementStrategy() {
             @Override
             public PreparedStatement makeStatement(Connection conn) throws SQLException {

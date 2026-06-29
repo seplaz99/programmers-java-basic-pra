@@ -5,6 +5,7 @@ import org.example.springtheory.ch05.ex5_1.dao.UserDAO;
 import org.example.springtheory.ch05.ex5_1.domain.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 // UserService - 사용자 레벨 관리 '비즈니스 로직'을 담는 계층
 
@@ -34,5 +35,42 @@ public class UserService {
     public void add(User user) throws SQLException, ClassNotFoundException {
         user.setLevel(Level.BASIC);
         userDAO.add(user);
+    }
+
+    // 업그레이드 담당
+    public void upgradeLevels() throws SQLException, ClassNotFoundException {
+        List<User> users = userDAO.getAll();
+        for (User user : users) {
+            if (canUpgrade(user)) {
+                upgradeLevel(user);
+            }
+        }
+
+        // [짚고 넘어갈 점 -> 다음 단계 추상화]
+        //  이 반복 도중 중간에서 예외가 나면, 앞쪽 사용자는 이미 update 되고 뒤쪽은 안 된 채로 끝난다.
+        //  '전부 성공 아니면 전부 취소(원자성)'가 보장되지 않는 것이다.
+        //  -> 이를 해결하는 것이 '트랜잭션'이고, 스프링이 이를 기술과 무관하게 다루도록 해주는 것이
+        //     바로 5장의 핵심인 '트랜잭션 서비스 추상화'다. (이어지는 예제에서 다룬다)
+    }
+
+    // '올릴 수 있는가'
+    private boolean canUpgrade(User user) {
+        Level curLevel = user.getLevel();
+        switch (curLevel) {
+            case BASIC:
+                return user.getLogin() >= MIN_LOGCOUNT_FOR_SILVER;
+            case SILVER:
+                return user.getLogin() >= MIN_RECOMMEND_FOR_GOLD;
+            case GOLD:
+                return false;
+            default:
+                throw new IllegalStateException("Unexpected value: " + curLevel);
+        }
+    }
+
+    // 실제 업그레이드
+    protected void upgradeLevel(User user) throws SQLException, ClassNotFoundException {
+        user.upgradeLevel();
+        userDAO.update(user);
     }
 }
