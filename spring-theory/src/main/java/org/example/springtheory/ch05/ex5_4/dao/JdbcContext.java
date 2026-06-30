@@ -1,4 +1,4 @@
-package org.example.springtheory.ch05.ex5_3.dao;
+package org.example.springtheory.ch05.ex5_4.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.datasource.DataSourceUtils;

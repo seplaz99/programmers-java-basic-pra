@@ -1,12 +1,11 @@
-package org.example.springtheory.ch05.ex5_3.service;
+package org.example.springtheory.ch05.ex5_4.service;
 
-import org.example.springtheory.ch05.ex5_3.domain.User;
+import org.example.springtheory.ch05.ex5_4.domain.User;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class UserServiceTx implements UserService {
 

@@ -1,4 +1,4 @@
-package org.example.springtheory.ch05.ex5_3.dao;
+package org.example.springtheory.ch05.ex5_4.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

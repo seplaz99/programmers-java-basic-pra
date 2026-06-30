@@ -1,8 +1,6 @@
-package org.example.springtheory.ch05.ex5_3.dao;
+package org.example.springtheory.ch05.ex5_4.dao;
 
-import org.example.springtheory.ch05.ex5_3.service.UserService;
-import org.example.springtheory.ch05.ex5_3.service.UserServiceImpl;
-import org.example.springtheory.ch05.ex5_3.service.UserServiceTx;
+import org.example.springtheory.ch05.ex5_4.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -13,6 +11,15 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DaoFactory {
+    // * 메일 발송 구현을 여기서 결정한다(추상화의 교체 지점).
+    //  - 지금은 실제 SMTP 서버가 없으므로 DummyMailSender(아무것도 안 함)를 꽂는다.
+    //  - 운영에서는 JavaMail 기반 실제 발송 구현으로 '이 한 줄만' 바꾸면 된다.
+    //    UserServiceImpl 코드는 전혀 손대지 않는다.
+    @Bean
+    public MailSender mailSender() {
+        return new DummyMailSender();
+    }
+
     @Bean
     public UserService userService() {
         return new UserServiceTx( transactionManager(), userServiceImpl() );

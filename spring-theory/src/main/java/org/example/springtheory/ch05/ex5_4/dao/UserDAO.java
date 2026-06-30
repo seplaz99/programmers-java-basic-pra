@@ -1,6 +1,6 @@
-package org.example.springtheory.ch05.ex5_3.dao;
+package org.example.springtheory.ch05.ex5_4.dao;
 
-import org.example.springtheory.ch05.ex5_3.domain.User;
+import org.example.springtheory.ch05.ex5_4.domain.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

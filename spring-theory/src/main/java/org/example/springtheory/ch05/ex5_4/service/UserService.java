@@ -1,6 +1,6 @@
-package org.example.springtheory.ch05.ex5_3.service;
+package org.example.springtheory.ch05.ex5_4.service;
 
-import org.example.springtheory.ch05.ex5_3.domain.User;
+import org.example.springtheory.ch05.ex5_4.domain.User;
 
 import java.sql.SQLException;
 

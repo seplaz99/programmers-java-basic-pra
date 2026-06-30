@@ -1,6 +1,6 @@
-package org.example.springtheory.ch05.ex5_3.domain;
+package org.example.springtheory.ch05.ex5_4.domain;
 
-import org.example.springtheory.ch05.ex5_3.dao.Level;
+import org.example.springtheory.ch05.ex5_4.dao.Level;
 
 public class User {
     private String id;
