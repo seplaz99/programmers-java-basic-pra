@@ -27,7 +27,7 @@ public class DaoFactory {
 
     @Bean
     public UserServiceImpl userServiceImpl() {
-        return new UserServiceImpl(userDAO());
+        return new UserServiceImpl(userDAO(), mailSender());
     }
 
     @Bean

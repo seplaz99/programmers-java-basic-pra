@@ -34,9 +34,11 @@ public class UserServiceImpl implements UserService {
     public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
     private UserDAO userDAO;
+    private MailSender mailSender;
 
-    public UserServiceImpl(UserDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO, MailSender mailSender) {
         this.userDAO = userDAO;
+        this.mailSender = mailSender;
     }
 
     // 신규 가입
@@ -80,5 +82,17 @@ public class UserServiceImpl implements UserService {
     protected void upgradeLevel(User user) throws SQLException, ClassNotFoundException {
         user.upgradeLevel();
         userDAO.update(user);
+        sendUpgradeEmail(user);
+    }
+
+    // '메일을 만들어 보낸다'까지만 한다. '어떻게 실제로 보내는가'는 주입된 mailSender에 맡긴다.
+    private void sendUpgradeEmail(User user) {
+        // User에 email 필드가 없으므로 예시로 id를 주소처럼 사용한다(실무라면 user.getEmail()).
+        Mail mail = new Mail(
+                user.getId(),
+                "[안내] 등급이 업그레이드되었습니다",
+                user.getName() + "님의 등급이 " + user.getLevel() + " 로 변경되었습니다."
+        );
+        mailSender.send(mail);
     }
 }
