@@ -1,0 +1,38 @@
+package org.example.springtheory.ch06.ex6_1;
+
+// * AOP(Aspect Oriented Programming, 과점지향 프로그래밍)
+// 여러 모듈에서 '공통적으로 흩어져 있는 부가기능'(예: 트랜잭션, 로깅, 보안)을
+// '핵심 비즈니스 로직'에서 떼어내, 한곳에 모아 관리하는 프로그래밍 방법이다.
+// - 핵심 기능 : 그 객체가 진짜 해야 하는 일(예: 레벨 업그레이드 규칙)
+// - 부가 기능 : 여러 곳에서 똑같이 필요한 보조 기능(예: 트랜잭션 경계)
+
+// * 문제점
+// 5장에서 트랜젝션이라는 '부가기능'을 비즈니스 로직에서 분리했다.
+// - UserServiceImpl : 핵심기능
+// - UserServiceTx : 부가기능 -> 손으로 만든 프록시
+// 프록시(proxy) : 핵심기능을 감싸 부가기능을 더하는 중간 오브젝트
+// 한계 : 부가기능 적용 서비스가 늘 때마다 UserServiceTx 같은 프록시 클래스를 '일일이' 만들어야 하고,
+// 트랜잭션이 필요없는 메서드까지 단순 위임 코드를 다 작성해야 한다.
+
+// * 6장의 큰 흐름 (트랜잭션을 소재로 AOP에 도달한다)
+//   - ex_6_1 손수 만든 프록시 -> 다이내믹 프록시
+//   - ex_6_2 스프링의 프록시 팩토리 빈
+//   - ex_6_3 스프링 AOP (자동 프록시 생성)
+//   - ex_6_4 @Transactional (선언적 트랜잭션)
+
+// '다이나믹 프록시'
+
+import org.example.springtheory.ch06.ex6_1.dao.DaoFactory;
+import org.example.springtheory.ch06.ex6_1.service.UserService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class Start {
+
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+
+        UserService userService = context.getBean("userService", UserService.class);
+
+        userService.upgradeLevels();
+    }
+}
