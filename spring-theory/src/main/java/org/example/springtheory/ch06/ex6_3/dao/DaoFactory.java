@@ -1,8 +1,10 @@
 package org.example.springtheory.ch06.ex6_3.dao;
 
 import org.example.springtheory.ch06.ex6_3.service.TransactionAdvice;
+import org.example.springtheory.ch06.ex6_3.service.UserService;
 import org.example.springtheory.ch06.ex6_3.service.UserServiceImpl;
 import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.NameMatchMethodPointcut;
 import org.springframework.context.annotation.Bean;
@@ -19,11 +21,18 @@ public class DaoFactory {
     //  - target과 advisor만 등록하면, 스프링이 프록시를 알아서 만들어준다.
     //  - 여러 advisor를 addAdvisor로 얹을 수도 있다(부가기능 여러 개 조합).
     @Bean
-    public ProxyFactoryBean userService() {
-        ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
-        proxyFactoryBean.setTarget(userServiceImpl());
-        proxyFactoryBean.addAdvisor(transactionAdvisor());
-        return proxyFactoryBean;
+    public UserService userService() {
+        return new UserServiceImpl(userDAO());
+    }
+
+    // 자동 프록시 생성기 - DefaultAdvisorAutoProxyCreator
+    // 빈 후처리기다. 컨테이너가 빈을 만드는 '도중에' 끼어들어 가공한다.
+    // 등록된 모든 Advisor의 Pointcut을 검사해서, 조건에 맞는 빈을 '자동으로 프록시로 바꿔치기'한다.
+    //  => 더 이상 빈마다 ProxyFactoryBean을 일일이 설정하지 않아도 된다(ex_6_2의 반복이 사라짐).
+    //     target 빈은 평범하게 등록만 해두면, 이 생성기가 알아서 프록시를 입혀준다.
+    @Bean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        return new DefaultAdvisorAutoProxyCreator();
     }
 
     // Advisor : Pointcut + Advice
