@@ -115,6 +115,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class EssentialsApplication {
 
+	// 애플리케이션의 진입 메서드다.
 	public static void main(String[] args) {
 		SpringApplication.run(EssentialsApplication.class, args);
 	}
