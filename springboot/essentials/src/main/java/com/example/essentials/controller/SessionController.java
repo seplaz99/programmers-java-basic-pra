@@ -37,7 +37,7 @@ public class SessionController {
         if (username != null) {
             model.addAttribute("username", username);
         }
-        
+
         return "login"; // HTML 파일명
     }
 
@@ -48,6 +48,14 @@ public class SessionController {
     ) {
         System.out.println("user name : " + username);
         session.setAttribute("username", username);
+
+        return "redirect:/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        // 무효화
+        session.invalidate();
 
         return "redirect:/login";
     }
