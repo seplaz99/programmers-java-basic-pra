@@ -37,6 +37,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // - HTTP는 '무상태(stateless)' 프로토콜이라, 각 요청은 서로를 기억하지 못한다.
 // 그래서 로그인 상태 유지 등을 위해 세션이나 토큰 같은 보조장치를 함께 사용한다.
 
+// HTTP 메서드 - GET, POST, PUT, DELETE
+// 메서드는 '이 요청으로 무엇을 하고 싶은지'를 나타내는 동사이다.
+// 데이터의 생성/조회/수정/삭제(CRUD)와 자연스럽게 짝지어진다.
+// - GET : 데이터를 '조회'할 때 쓴다.
+// 서버의 상태를 바꾸지 않으며, 값은 주로 URL뒤 퀄 스트링에 담는다.
+// - POST : 데이터를 '새로 생성'할 때 쓴다.
+// 보낼 내용을 요청 본문(body)에 담으며, 서버의 상태를 바꾼다.
+// - PUT : 기존 데이터를 '수정(전체 교체)'할 때 쓴다.
+// 같은 요청을 여러 번 보내도 결과가 같은 '멱등성'을 가진다.
+// - DELETE : 데이터를 '삭제'할 때 쓴다.
+// - 스프링에서는 @GetMapping, @PostMapping, @PutMapping, @DeleteMapping 으로
+// 각 메서드 요청을 컨트롤러의 특정 메서드에 연결한다.
+
 @SpringBootApplication
 public class EssentialsApplication {
 
