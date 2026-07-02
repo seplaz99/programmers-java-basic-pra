@@ -28,6 +28,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // - 스프링부트(Spring Boot)는 톰캣을 라이브러리 형태로 애플리케이션 안에 내장(embedded)하여,
 // 우리가 따로 설치하지 않아도 main() 실행만으로 서버가 함께 떠서 요청을 받을 수 있다.
 
+// HTTP 프로토콜이란
+// HTTP((HyperText Transfer Protocol)는 브라우저(클라이언트)와 서버가 서로 데이터를 주고받을 때 지키는 '약속(규칙)'이다.
+// - 통신은 항상 '요청(Request) -> 응답(Response)'의 한쌍으로 이루어진다.
+// 클라이언트가 요청을 보내면 서버가 그에 대한 응답을 돌려 주는 식이다.
+// - 요청에는 '무엇을'(URL), '어떻게'(HTTP 메서드), 부가정보(헤더), 본문(body)이 담긴다.
+// - 응답에는 처리 결과를 나타내는 상태코드(200 성공, 404 없음, 500 서버 오류 등)와 실제 데이터(HTML, JSON 등)가 담긴다.
+// - HTTP는 '무상태(stateless)' 프로토콜이라, 각 요청은 서로를 기억하지 못한다.
+// 그래서 로그인 상태 유지 등을 위해 세션이나 토큰 같은 보조장치를 함께 사용한다.
+
 @SpringBootApplication
 public class EssentialsApplication {
 
