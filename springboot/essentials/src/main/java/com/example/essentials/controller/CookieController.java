@@ -1,6 +1,12 @@
 package com.example.essentials.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 // 쿠키(Cookie)란?
 // '브라우저 쪽'에 저장되는 작은 이름-값 데이터 조각이다.
@@ -33,5 +39,34 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class CookieController {
+    @GetMapping("/set-cookie")
+    public String setCookie() {
+        return "set-cookie";
+    }
 
+    @PostMapping("/set-cookie")
+    public String setCookie(
+            @RequestParam String username,
+            HttpServletResponse response,
+            Model model
+    ) {
+        // 쿠키 생성
+        Cookie cookie = new Cookie("username", username);
+
+        // 유효기간
+        cookie.setMaxAge(7 * 24 * 60 * 60); // 7일
+
+        // HttpOnly : 자바스크립트(document, cookie)로는 못 읽게 막는다. XSS 공격 방어에 쓴다.
+        cookie.setHttpOnly(true);
+
+        // Path : 브라우저가 이 쿠키를 어떤 경로 요청에 보낼지 정한다.
+        //        지정한 경로와 그 하위 경로 요청에만 쿠키가 실려 간다.
+        //        "/" 는 모든 경로가 "/"로 시작하므로, 사이트 전체 요청에 항상 보낸다는 뜻이다.
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        model.addAttribute("message", "쿠키가 설정되었습니다.");
+
+        return "result-cookie";
+    }
 }
