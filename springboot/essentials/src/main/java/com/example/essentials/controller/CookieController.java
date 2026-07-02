@@ -1,9 +1,11 @@
 package com.example.essentials.controller;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,6 +69,67 @@ public class CookieController {
 
         model.addAttribute("message", "쿠키가 설정되었습니다.");
 
+        return "result-cookie";
+    }
+
+    // 쿠키 읽기
+    @GetMapping("/get-cookie")
+    public String getCookie(
+            HttpServletRequest request,
+            Model model
+    ) {
+        Cookie[] cookies = request.getCookies();
+        String username = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("username".equals(cookie.getName())) {
+                    username = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if(username != null) {
+            model.addAttribute("username", username);
+            model.addAttribute("message", "쿠키에서 사용자 정보를 읽었습니다.");
+        } else {
+            model.addAttribute("message", "쿠키가 존재하지 않습니다.");
+        }
+        return "result-cookie";
+    }
+
+    // 쿠키 읽기 (@CookieValue 버전) : 위 getCookie() 와 결과는 같지만 훨씬 간결하다.
+    // - @CookieValue("username") 을 쓰면, 스프링이 그 이름의 쿠키를 알아서 찾아
+    //   매개변수 username 에 값을 넣어 준다. (DispatcherServlet 이 파라미터를 만들어 주는 단계다.)
+    // - required = false : 해당 쿠키가 없어도 에러 없이 진행한다. 없으면 null 이 들어온다.
+    //   (기본값은 true 라, 쿠키가 없으면 400 에러가 나므로 조회용에서는 false 로 두는 게 안전하다.)
+    // - 없을 때 기본값을 주고 싶으면 defaultValue = "guest" 처럼 지정할 수도 있다.
+    @GetMapping("/get-cookie2")
+    public String getCookieByAnnotations(
+            @CookieValue(value = "username", required = false) String username,
+            Model model
+    ) {
+        if(username != null) {
+            model.addAttribute("username", username);
+            model.addAttribute("message", "쿠키에서 사용자 정보를 읽었습니다.");
+        } else {
+            model.addAttribute("message", "쿠키가 존재하지 않습니다.");
+        }
+        return "result-cookie";
+    }
+
+    @GetMapping("/delete-cookie")
+    public String deleteCookie(
+            HttpServletResponse response,
+            Model model
+    ) {
+        Cookie cookie = new Cookie("username", "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        model.addAttribute("message", "쿠키가 삭제되었습니다.");
         return "result-cookie";
     }
 }
