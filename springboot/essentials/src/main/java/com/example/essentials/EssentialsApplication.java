@@ -70,6 +70,26 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // 기준으로 하위 패키지를 훑으며 @Component, @Service, @Repository, @Controller 등이 붙은 빈(Bean)들을 찾아 등록한다.
 // - @EnableAutoConfiguration : '자동 구성'을 켜는 핵심 스위치이다.
 
+// 실행 매커니즘 - main()이 호출된 뒤 벌어지는 일
+// 1. SpringApplication.run()이 호출되면, 내부적으로 ApplicationContext-스프링 컨테이너를 생성한다.
+// 2. 웹 관련 클래스가 클래스패스에 있는 지 확인해 웹 애플리케이션 타입(Servlet, Reactive, None)을 스스로 판단한다.
+// 3. @ComponentScan에 의해 우리가 직접 작성한 빈을 먼저 스캔해 등록한다.
+// 4. @EnableAutoConfiguration에 의해 자동 구성 후보들을 불러온다.
+
+// 자동 구성의 순서와 원리
+// 1. 스프링부트는 META-INF/spring/....AutoConfiguration.imports 파일에
+//    나열된 수많은 자동 구성 후보 클래스 목록을 읽어 들인다.
+// 2. 각 후보는 @ConditionalOnClass, @ConditionalOnMissingBean,
+//    @ConditionalOnProperty 같은 '조건(Condition)'을 달고 있다.
+//    이 조건이 충족될 때만 해당 구성이 실제로 적용된다.
+//    예를 들어 클래스패스에 톰캣이 있으면 내장 톰캣이 자동으로 구성되는 식이다.
+// 3. 중요한 점은 '사용자 정의 빈이 우선'이라는 것이다.
+//    @ConditionalOnMissingBean 덕분에 개발자가 직접 만든 빈이 있으면
+//    자동 구성은 물러나고, 없을 때만 기본값을 채워 넣는다.
+//    그래서 자동 구성은 항상 사용자 설정보다 나중에, 그리고 조건부로 동작한다.
+// 4. 구성 간 순서가 필요한 경우 @AutoConfiguration(before/after),
+//    @AutoConfigureOrder 등으로 상대적 순서를 조정한다.
+
 @SpringBootApplication
 public class EssentialsApplication {
 
