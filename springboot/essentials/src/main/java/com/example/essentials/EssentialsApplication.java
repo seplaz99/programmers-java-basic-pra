@@ -62,6 +62,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // 이때 멱등한 요청은 여러 번 가도 안전하지만,
 // 멱등하지 않은 POST는 중복 처리(예: 결제 두 번 되는 것)이 발생할 수 있다.
 
+// 스프링부트 애플리케이션의 시작점
+// [@SpringBootApplication]
+// 이 애노테이션 하나는 사실 세 가지 에너테이션을 합쳐 놓은 것이다.
+// - @SpringBootConfiguration : 이 클래스 자체가 설정 클래스임을 알리며, 내부의 @Bean 정의를 스프링 컨테이너에 등록하게 한다.
+// - @ComponentScan : 이 클래스가 위치한 패키지(여기서는 com.example.spring.essentials)를
+// 기준으로 하위 패키지를 훑으며 @Component, @Service, @Repository, @Controller 등이 붙은 빈(Bean)들을 찾아 등록한다.
+// - @EnableAutoConfiguration : '자동 구성'을 켜는 핵심 스위치이다.
+
 @SpringBootApplication
 public class EssentialsApplication {
 
