@@ -1,5 +1,6 @@
 package com.example.essentials.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 // 디스패처 서블릿(DispatcherServlet) - 요청처리의 심장
@@ -53,4 +54,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class FilterController {
+    @GetMapping("/hello")
+    public String hello(){
+        System.out.println("he");
+        return "Hello World";
+    }
+
+    @GetMapping("/api/data")
+    public String data() {
+        return "data";
+    }
 }
