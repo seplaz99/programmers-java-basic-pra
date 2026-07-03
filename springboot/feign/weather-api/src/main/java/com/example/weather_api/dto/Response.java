@@ -7,6 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class WeatherResponse {
-    private Response response;
+public class Response {
+    private Header header;
+    private Body body;
 }

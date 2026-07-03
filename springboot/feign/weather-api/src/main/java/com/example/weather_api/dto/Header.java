@@ -7,6 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class WeatherResponse {
-    private Response response;
+public class Header {
+    private String resultCode;
+    private String resultMsg;
 }
