@@ -65,4 +65,13 @@ public class DataController {
 
         return response;
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteData(@PathVariable Long id) {
+        DataResponse removed = dataStore.remove(id);
+
+        if (removed == null) throw new RuntimeException("Data not found(delete)" + id);
+
+        return "Data deleted with id : " + id;
+    }
 }
