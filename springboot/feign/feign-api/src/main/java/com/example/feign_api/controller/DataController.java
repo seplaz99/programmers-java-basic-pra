@@ -48,4 +48,21 @@ public class DataController {
         return build;
     }
 
+    @PutMapping("/{id}")
+    public DataResponse updateData(
+            @PathVariable Long id,
+            @RequestBody DataRequest dataRequest
+    ) {
+        DataResponse response = dataStore.get(id);
+
+        if (response == null) {
+            throw new RuntimeException("Data not found" + id);
+        }
+
+        response.setValue(dataRequest.getValue());
+        response.setName(dataRequest.getName());
+        dataStore.put(id, response);
+
+        return response;
+    }
 }
