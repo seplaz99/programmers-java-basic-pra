@@ -1,11 +1,9 @@
 package com.example.feign_api.controller;
 
+import com.example.feign_api.dto.DataRequest;
 import com.example.feign_api.dto.DataResponse;
 import jakarta.annotation.PostConstruct;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +33,19 @@ public class DataController {
         }
 
         return response;
+    }
+
+    @PostMapping
+    public DataResponse createData(@RequestBody DataRequest dataRequest) {
+        DataResponse build = DataResponse.builder()
+                .id(++idCounter)
+                .value(dataRequest.getValue())
+                .name(dataRequest.getName())
+                .build();
+
+        dataStore.put(idCounter, build);
+
+        return build;
     }
 
 }
