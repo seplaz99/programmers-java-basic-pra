@@ -8,9 +8,9 @@ import com.example.feign_client.dto.DataRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-// @FeignClient
-// name : 이 클라이언트의고유 이름(Bean 이름), 필수값
-// url : 호출할 대상 서버 주소
+// * @FeignClient
+// - name : 이 클라이언트의 고유 이름(Bean 이름), 필수값
+// - url : 호출할 대상 서버 주소. ${feign-api.url}는 application.yaml에서 값을 읽어온다.
 // (주소를 하드코딩하지 않고 설정으로 분리)
 @FeignClient(name = "exampleClient", url = "${feign-api.url}/api/data")
 public interface ExampleClient {
@@ -19,11 +19,12 @@ public interface ExampleClient {
     String getData(@PathVariable Long id);
 
     @PostMapping
-    String creatData(@PathVariable DataRequest dataRequest);
+    String createData(@RequestBody DataRequest dataRequest);
 
     @PutMapping("/{id}")
     String updateData(@PathVariable Long id, @RequestBody DataRequest dataRequest);
 
     @DeleteMapping("/{id}")
     String deleteData(@PathVariable Long id);
+
 }
