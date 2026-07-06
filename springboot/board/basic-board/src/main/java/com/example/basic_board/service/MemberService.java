@@ -20,6 +20,7 @@ public class MemberService {
         private final MemberRepository memberRepository;
         private final MemberMapper memberMapper;
 
+        @Transactional
         public void join(MemberJoinRequestDto dto) {
             // 아이디 중복 체크
             if (memberRepository.existsByUserId(dto.getUserId())) {

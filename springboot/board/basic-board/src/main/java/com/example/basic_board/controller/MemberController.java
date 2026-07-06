@@ -11,4 +11,9 @@ public class MemberController {     // 화면 이동만 담당
     public String join() {
         return "sign-up";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "sign-in";
+    }
 }
