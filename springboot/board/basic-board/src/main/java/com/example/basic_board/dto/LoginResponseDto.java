@@ -1,0 +1,22 @@
+package com.example.basic_board.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public class LoginResponseDto {
+    private boolean success;
+    private String url;
+    private String message;
+
+    // 로그인 성공
+    public static LoginResponseDto success() {
+        return new LoginResponseDto(true, "/", "로그인에 성공했습니다.");
+    }
+
+    // 로그인 실패
+    public static LoginResponseDto fail() {
+        return new LoginResponseDto(false, null, "로그인에 실패했습니다.");
+    }
+}

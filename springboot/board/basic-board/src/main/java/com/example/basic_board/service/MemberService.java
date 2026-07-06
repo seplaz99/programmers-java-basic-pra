@@ -1,12 +1,16 @@
 package com.example.basic_board.service;
 
+import com.example.basic_board.domain.entity.Member;
 import com.example.basic_board.domain.repository.MemberRepository;
+import com.example.basic_board.dto.LoginRequestDto;
 import com.example.basic_board.dto.MemberJoinRequestDto;
 import com.example.basic_board.exception.DuplicateUserIdException;
 import com.example.basic_board.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 // 이 클래스의 "모든 메서드"에 기본 적용된다.
@@ -29,5 +33,12 @@ public class MemberService {
             }
 
             memberRepository.save(memberMapper.toEntity(dto));
+        }
+
+        public Optional<Member> login(LoginRequestDto dto) {
+            return memberRepository.findByUserId(dto.getUsername())
+                    .filter(
+                           member -> member.getPassword().equals(dto.getPassword())
+                    );
         }
 }
