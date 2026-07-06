@@ -2,6 +2,7 @@ package com.example.basic_board.service;
 
 import com.example.basic_board.domain.repository.MemberRepository;
 import com.example.basic_board.dto.MemberJoinRequestDto;
+import com.example.basic_board.exception.DuplicateUserIdException;
 import com.example.basic_board.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class MemberService {
             // 아이디 중복 체크
             if (memberRepository.existsByUserId(dto.getUserId())) {
                 // 에외 공통화
+                throw new DuplicateUserIdException("[회원가입] 이미 존재하는 아이디입니다.");
             }
 
             memberRepository.save(memberMapper.toEntity(dto));
