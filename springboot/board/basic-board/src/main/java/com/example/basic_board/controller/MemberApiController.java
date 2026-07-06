@@ -1,16 +1,20 @@
 package com.example.basic_board.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.basic_board.dto.MemberJoinRequestDto;
+import com.example.basic_board.dto.MemberJoinResponseDto;
+import com.example.basic_board.service.MemberService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/members")
 public class MemberApiController {
-    @GetMapping("/join")
-    public void join() {
+    private final MemberService memberService;
 
+    @PostMapping("/join")
+    public MemberJoinResponseDto join(@RequestBody MemberJoinRequestDto dto) {
+        memberService.join(dto);
+        return new MemberJoinResponseDto("/members/login");
     }
-
-
 }

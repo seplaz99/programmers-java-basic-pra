@@ -17,4 +17,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 // delete(엔티티) : 삭제
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
+    boolean existsByUserId(String userId);  // 중복체크
 }

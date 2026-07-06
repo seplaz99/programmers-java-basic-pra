@@ -21,6 +21,10 @@ public class MemberService {
 
         public void join(MemberJoinRequestDto dto) {
             // 아이디 중복 체크
+            if (memberRepository.existsByUserId(dto.getUserId())) {
+                // 에외 공통화
+            }
+
             memberRepository.save(memberMapper.toEntity(dto));
         }
 }
