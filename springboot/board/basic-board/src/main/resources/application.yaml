@@ -1,3 +1,10 @@
 spring:
   application:
     name: basic-board
+  datasource:
+    #   jdbc:mysql://localhost:3306/java_basic
+    #   └─┬─┘ └─┬─┘   └───┬───┘ └┬┘ └───┬────┘
+    #   프로토콜 DB종류     호스트   포트   DB이름
+    url: jdbc:mysql://localhost:3306/java_basic?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 1234
