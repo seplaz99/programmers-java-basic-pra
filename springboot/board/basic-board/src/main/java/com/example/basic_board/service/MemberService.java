@@ -1,6 +1,8 @@
 package com.example.basic_board.service;
 
 import com.example.basic_board.domain.repository.MemberRepository;
+import com.example.basic_board.dto.MemberJoinRequestDto;
+import com.example.basic_board.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,4 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
         private final MemberRepository memberRepository;
+        private final MemberMapper memberMapper;
+
+        public void join(MemberJoinRequestDto dto) {
+            // 아이디 중복 체크
+            memberRepository.save(memberMapper.toEntity(dto));
+        }
 }
