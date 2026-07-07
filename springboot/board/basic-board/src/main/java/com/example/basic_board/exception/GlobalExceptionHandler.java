@@ -26,6 +26,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    // @ExceptionHandler : "어떤 예외를 처리"할지 지정한다.
+    // - 괄호 안에 적은 예외 타입이 발생하면, 스프링이 이 메서드를 자동으로 호출한다.
+    // - 메서드 파라미터로 그 예외 객체를 받아, 메시지 등 상세 정보를 꺼내 쓸 수 있다.
+    // @ResponseEntity<T>
+    // - HTTP 응답 "전체"를 표현하는 객체이다. 응답 본문(Body)뿐 아니라 "상태 코드"와 헤더까지 직접 지정할 수 있다.
+    // - 단순히 DTO만 반환하면 상태 코드가 항상 200(OK)
+    // 에러 상황에서는 상태 코드를 4XX/5XX등으로 바꿔야 하므로 ResponseEntity로 감싼다.
     @ExceptionHandler(DuplicateUserIdException.class)
     public ResponseEntity<ErrorResponseDto> duplicateUserIdException(DuplicateUserIdException e) {
         return ResponseEntity
