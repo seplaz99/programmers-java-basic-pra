@@ -45,7 +45,9 @@ import java.util.Optional;
 // - 그럴 때는 메서드 위에 @Query("JPQL 또는 SQL") 로 쿼리를 직접 작성한다 (이 클래스엔 아직 필요 없어 생략)
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    boolean existsByUserId(String userId);  // 중복체크
+
+    boolean existsByUserId(String userId);
 
     Optional<Member> findByUserId(String userId);
+
 }

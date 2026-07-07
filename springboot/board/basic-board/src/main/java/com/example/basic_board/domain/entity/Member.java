@@ -16,6 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)   // JPA는 기본 생성자가 필요하지만 외부에서 무분별한 생성을 막는다.
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
     private Long id;

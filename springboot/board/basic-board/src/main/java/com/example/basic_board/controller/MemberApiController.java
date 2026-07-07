@@ -3,8 +3,8 @@ package com.example.basic_board.controller;
 import com.example.basic_board.constant.SessionConst;
 import com.example.basic_board.dto.LoginRequestDto;
 import com.example.basic_board.dto.LoginResponseDto;
-import com.example.basic_board.dto.MemberJoinRequestDto;
 import com.example.basic_board.dto.MemberJoinResponseDto;
+import com.example.basic_board.dto.MemberJoinRequestDto;
 import com.example.basic_board.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -14,17 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
 public class MemberApiController {
+
     private final MemberService memberService;
 
     @PostMapping("/join")
     public MemberJoinResponseDto join(@RequestBody MemberJoinRequestDto dto) {
-        memberService.join(dto);
+        memberService.join( dto );
         return new MemberJoinResponseDto("/members/login");
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto dto, HttpSession session) {
-        return memberService.login(dto)
+        return memberService.login( dto )
                 .map(
                         member -> {
                             session.setAttribute(SessionConst.USER_ID, member.getUserId());
@@ -57,4 +58,5 @@ public class MemberApiController {
                 //   (참고: 인스턴스메서드는 obj::method, 생성자는 클래스이름::new 형태로도 쓸 수 있다)
                 .orElseGet(LoginResponseDto::fail);
     }
+
 }

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,8 +30,9 @@ public class Board {
     @Column(length = 255)
     private String filePath;
 
-    // original : 2026-01-01T00:00:00
+    // org : 2026-01-01T00:00:00
     // -> 2026-01-01 00:00
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime created;
+
 }

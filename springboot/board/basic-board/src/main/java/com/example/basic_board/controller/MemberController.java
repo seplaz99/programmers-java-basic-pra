@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/members")
-public class MemberController {     // 화면 이동만 담당
+public class MemberController {
+
     @GetMapping("/join")
     public String join() {
         return "sign-up";
@@ -16,4 +17,5 @@ public class MemberController {     // 화면 이동만 담당
     public String login() {
         return "sign-in";
     }
+
 }
