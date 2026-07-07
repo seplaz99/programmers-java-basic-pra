@@ -21,24 +21,41 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
-        private final MemberRepository memberRepository;
-        private final MemberMapper memberMapper;
+    private final MemberRepository memberRepository;
+    private final MemberMapper memberMapper;
 
-        @Transactional
-        public void join(MemberJoinRequestDto dto) {
-            // 아이디 중복 체크
-            if (memberRepository.existsByUserId(dto.getUserId())) {
-                // 에외 공통화
-                throw new DuplicateUserIdException("[회원가입] 이미 존재하는 아이디입니다.");
-            }
-
-            memberRepository.save(memberMapper.toEntity(dto));
+    @Transactional
+    public void join(MemberJoinRequestDto dto) {
+    // 아이디 중복 체크
+    if (memberRepository.existsByUserId(dto.getUserId())) {
+            // 에외 공통화
+            throw new DuplicateUserIdException("[회원가입] 이미 존재하는 아이디입니다.");
         }
 
-        public Optional<Member> login(LoginRequestDto dto) {
-            return memberRepository.findByUserId(dto.getUsername())
-                    .filter(
-                           member -> member.getPassword().equals(dto.getPassword())
-                    );
-        }
+        memberRepository.save(memberMapper.toEntity(dto));
+    }
+
+    // Optional<Member> : NPE(NullPointerException) 예방
+    // - 예전에는 "값이 없음"을 null로 표현했는데, null을 깜빡하고 그냥 쓰면 실행 중에 NPE가 터졌다.
+    // 예) Member m = findByUserId("test"); m.getUserName(); // m이 null이면 터진다.
+    // - 게다가 반환 타입만 봐서는 "null이 올 수 있는지" 알 수 가 없어 실숙하기가 쉬웠다.
+
+    // Optional = "값이 없을 수도 있다."을 타입으로 알려주는 상자(Wrapper)
+    // - 반환 타입이 Optional이면 "값이 없을 수 있으니 처리해라"라고 컴파일 단계에서 강제된다.
+    // - 즉 '없을 수 있음'을 문서가 아니라 "타입"으로 표현해 실수를 막는 장치이다.
+
+    // 상자(Wrapper)를 여는(값을 꺼내는) 주요 메서드
+    // - isPresent()/isEmpty() : 값이 있는지/없는지 boolean으로 확인
+    // - get() : 값을 꺼냄(비어있으면 예외! 되도록 쓰지 않는다.)
+    // - orElse(기본값) : 있으면 그 값, 없으면 기본값(기본값은 항상 미리 계산됨)
+    // - orElseGet(함수) : 있으면 그 값, 없으면 함수를 실행(없을때만 계산)
+    // - map(함수) : 값이 있으면 다른 값으로 변환, 없으면 그대로 empty
+    // - filter(조건) : 값이 있고 조건을 만족하면 유지, 아니면 empty 
+
+    public Optional<Member> login(LoginRequestDto dto) {
+        return memberRepository.findByUserId(dto.getUsername())
+                .filter(
+                       member -> member.getPassword().equals(dto.getPassword())
+                );
+    }
 }
