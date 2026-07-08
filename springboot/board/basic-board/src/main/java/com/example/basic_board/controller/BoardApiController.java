@@ -2,10 +2,7 @@ package com.example.basic_board.controller;
 
 import com.example.basic_board.domain.entity.Board;
 import com.example.basic_board.domain.repository.BoardRepository;
-import com.example.basic_board.dto.BoardDeleteRequestDto;
-import com.example.basic_board.dto.BoardDetailResponseDto;
-import com.example.basic_board.dto.BoardListResponseDto;
-import com.example.basic_board.dto.BoardWriteRequestDto;
+import com.example.basic_board.dto.*;
 import com.example.basic_board.exception.BoardNotFoundException;
 import com.example.basic_board.service.BoardService;
 import com.example.basic_board.service.FileService;
@@ -102,6 +99,11 @@ public class BoardApiController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
                 .body(resource);
+    }
+
+    @PutMapping("/{id}")
+    public void updateBoard(@PathVariable long id, @RequestBody BoardUpdateRequestDto dto) {
+        boardService.updateBoard(id, dto);
     }
 
     @DeleteMapping("/{id}")
