@@ -18,6 +18,7 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final FileService fileService;
 
     public List<Board> getBoardList(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").descending());
@@ -37,7 +38,17 @@ public class BoardService {
         return (int) boardRepository.count();
     }
 
+    @Transactional
     public void saveBoard(String userId, String title, String content, MultipartFile file) {
+        String filePath = fileService.storeFile(file);
 
+        Board build = Board.builder()
+                .userId(userId)
+                .title(title)
+                .content(content)
+                .filePath(filePath)
+                .build();
+
+        boardRepository.save(build);
     }
 }
