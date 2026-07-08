@@ -1,9 +1,12 @@
 package com.example.basic_board.controller;
 
 import com.example.basic_board.domain.entity.Board;
+import com.example.basic_board.domain.repository.BoardRepository;
+import com.example.basic_board.dto.BoardDeleteRequestDto;
 import com.example.basic_board.dto.BoardDetailResponseDto;
 import com.example.basic_board.dto.BoardListResponseDto;
 import com.example.basic_board.dto.BoardWriteRequestDto;
+import com.example.basic_board.exception.BoardNotFoundException;
 import com.example.basic_board.service.BoardService;
 import com.example.basic_board.service.FileService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +29,7 @@ public class BoardApiController {
 
     private final BoardService boardService;
     private final FileService fileService;
+    private final BoardRepository boardRepository;
 
     @GetMapping
     public BoardListResponseDto getBoardList(
@@ -99,4 +103,10 @@ public class BoardApiController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
                 .body(resource);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteBoard(@PathVariable long id, @RequestBody BoardDeleteRequestDto dto) {
+        boardService.deleteBoard(id, dto);
+    }
+
 }
