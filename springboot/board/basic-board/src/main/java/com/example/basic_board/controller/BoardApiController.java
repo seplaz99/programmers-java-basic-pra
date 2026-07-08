@@ -2,12 +2,10 @@ package com.example.basic_board.controller;
 
 import com.example.basic_board.domain.entity.Board;
 import com.example.basic_board.dto.BoardListResponseDto;
+import com.example.basic_board.dto.BoardWriteRequestDto;
 import com.example.basic_board.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +38,11 @@ public class BoardApiController {
                 .last(last)
                 .totalPages(totalPages)
                 .build();
+    }
+
+    @PostMapping
+    public void saveBoard(@ModelAttribute BoardWriteRequestDto dto) {
+
     }
 
 }
