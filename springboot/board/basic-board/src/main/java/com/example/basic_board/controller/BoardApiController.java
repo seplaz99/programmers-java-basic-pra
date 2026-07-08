@@ -1,6 +1,7 @@
 package com.example.basic_board.controller;
 
 import com.example.basic_board.domain.entity.Board;
+import com.example.basic_board.dto.BoardDetailResponseDto;
 import com.example.basic_board.dto.BoardListResponseDto;
 import com.example.basic_board.dto.BoardWriteRequestDto;
 import com.example.basic_board.service.BoardService;
@@ -43,6 +44,11 @@ public class BoardApiController {
     @PostMapping
     public void saveBoard(@ModelAttribute BoardWriteRequestDto dto) {
         boardService.saveBoard(dto.getUserId(), dto.getTitle(), dto.getContent(), dto.getFile());
+    }
+
+    @GetMapping("/{id}")
+    public BoardDetailResponseDto getBoard(@PathVariable long id) {
+        return null;
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.basic_board.service;
 
 import com.example.basic_board.domain.entity.Board;
 import com.example.basic_board.domain.repository.BoardRepository;
+import com.example.basic_board.exception.BoardNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,5 +53,10 @@ public class BoardService {
                 .build();
 
         boardRepository.save(build);
+    }
+
+    public Board getBoardDetail(long id) {
+        return boardRepository.findById(id)
+                .orElseThrow(() -> new BoardNotFoundException("[BOARD] 게시글을 찾을 수 없습니다. id : " + id));
     }
 }
