@@ -9,6 +9,8 @@ import com.example.basic_board.service.FileService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,5 +84,19 @@ public class BoardApiController {
         //   - URLEncoder 는 공백을 '+' 로 바꾸는데, 파일명에선 '+' 가 그대로 보이면 곤란하므로 %20 으로 치환한다
         String encodedFileName = URLEncoder.encode(resource.getFilename(), StandardCharsets.UTF_8)
                 .replaceAll("\\+", "%20");
+
+        // .contentType(MediaType.APPLICATION_OCTET_STREAM) -> 힌트
+        // 무슨 파일인지 특정하지 않은 순수 바이너리라는 뜻
+        // 브라우저가 열 방법을 몰라 저장쪽으로 기울게 하는 '힌트'일 뿐, 다운로드 확정하진 못한다.
+        // (확장자 등에 따라 브라우저가 그냥 열어버릴 수도 있다.)
+        // .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
+        // attachment는 인라인으로 열지말고 무조건 첨부(다운로드)하라는 확실한 지시
+        // filename*(별표)는 인코딩을 명시하는 최신 문법으로 "저장할 기본 파일명"을 정한다.
+        // 이게 없으면 URL 끝의 UUID 붙은 이름으로 저장돼 버린다. 그래서 원본 이름으로 저장되게 넣는 법
+        // utf-8 뒤 '' : 언어필드 (생략) ex) utf-8'ko'
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
+                .body(resource);
     }
 }
