@@ -48,7 +48,14 @@ public class BoardApiController {
 
     @GetMapping("/{id}")
     public BoardDetailResponseDto getBoard(@PathVariable long id) {
-        return null;
+        Board boardDetail = boardService.getBoardDetail(id);
+        return BoardDetailResponseDto.builder()
+                .title(boardDetail.getTitle())
+                .content(boardDetail.getContent())
+                .userId(boardDetail.getUserId())
+                .filePath(boardDetail.getFilePath())
+                .created(boardDetail.getCreated())
+                .build();
     }
 
 }
