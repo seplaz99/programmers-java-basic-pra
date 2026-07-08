@@ -102,7 +102,7 @@ public class BoardApiController {
     }
 
     @PutMapping("/{id}")
-    public void updateBoard(@PathVariable long id, @RequestBody BoardUpdateRequestDto dto) {
+    public void updateBoard(@PathVariable long id, @ModelAttribute BoardUpdateRequestDto dto) {
         boardService.updateBoard(id, dto);
     }
 
