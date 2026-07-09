@@ -74,4 +74,42 @@ class MemberServiceTest {
         assertThat(result.get().getUserName()).isEqualTo("홍길동");
     }
 
+    @Test
+    @DisplayName("로그인 - 비밀번호가 틀리면 빈 Optional을 반환한다.")
+    void login_비밀번호가_틀리면_빈_Optional() {
+        // given - "test/1234" 회원이 DB에 있다고 가정
+        Member member = Member.builder()
+                .userId("test")
+                .password("1234")
+                .userName("홍길동")
+                .build();
+        given( memberRepository.findByUserId("test") ).willReturn( Optional.of(member) );
+
+        LoginRequestDto requestDto = new LoginRequestDto();
+        requestDto.setUsername("test");
+        requestDto.setPassword("9999");
+
+        // when
+        Optional<Member> result = memberService.login(requestDto);
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("로그인 - 아이디가 없으면 빈 Optional을 반환한다.")
+    void login_아이디가_없으면_빈_Optional() {
+        // given
+        given( memberRepository.findByUserId("nobody") ).willReturn( Optional.empty() );
+
+        LoginRequestDto requestDto = new LoginRequestDto();
+        requestDto.setUsername("nobody");
+        requestDto.setPassword("9999");
+
+        // when
+        Optional<Member> result = memberService.login(requestDto);
+
+        // then
+        assertThat(result).isEmpty();
+    }
 }
