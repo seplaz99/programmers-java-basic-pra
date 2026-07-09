@@ -51,6 +51,7 @@ public class LoggingAspect {
         String method = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
 
         String httpInfo = "";
+        // - RequestContextHolder : 스프링이 "지금 이 요청"의 정보를 담아두는 보관소. 어디서든 꺼낼 수 있다
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
             HttpServletRequest request = attributes.getRequest();
@@ -64,6 +65,7 @@ public class LoggingAspect {
         long start = System.currentTimeMillis();
 
         try {
+            // 이 한줄을 기준으로 요청받은 메서드 실행 전, 실행 후로 나뉜다.
             Object result = joinPoint.proceed();
 
             // === 대상 메서드가 "정상 종료"된 후 로깅 ===
