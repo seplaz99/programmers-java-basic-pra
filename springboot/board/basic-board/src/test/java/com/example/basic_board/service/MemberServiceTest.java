@@ -59,6 +59,9 @@ import static org.mockito.Mockito.verify;
 //   - 그래서 리포지토리를 Mock 으로 두고 "이 메서드는 이런 값을 돌려준다고 치자" 라고 우리가 지정한다
 //   - 스프링을 아예 띄우지 않으므로 매우 빠르다 (@SpringBootTest 없음에 주목)
 
+// # 참고: 서비스에 붙은 클래스 레벨 @Transactional 은 여기선 동작하지 않는다
+//         (트랜잭션은 스프링이 프록시로 걸어주는 기능인데, 지금은 스프링을 안 띄우고 new 로 만든 순수 객체라서)
+
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
