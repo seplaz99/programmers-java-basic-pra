@@ -50,4 +50,14 @@ public class GlobalExceptionHandler {
                         new ErrorResponseDto(HttpStatus.NOT_FOUND.value(), e.getMessage())
                 );
     }
+
+    // 최후 보루 핸들러 : 위에서 처리하지 못한 "모든 예외"를 잡는다.
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> exception(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다.")
+                );
+    }
 }
