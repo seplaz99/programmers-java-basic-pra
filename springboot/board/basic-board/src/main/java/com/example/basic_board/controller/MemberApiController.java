@@ -6,10 +6,12 @@ import com.example.basic_board.dto.LoginResponseDto;
 import com.example.basic_board.dto.MemberJoinResponseDto;
 import com.example.basic_board.dto.MemberJoinRequestDto;
 import com.example.basic_board.service.MemberService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "회원 API", description = "회원가입, 로그인, 로그아웃 (세션 기반, spring security 미사용)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
