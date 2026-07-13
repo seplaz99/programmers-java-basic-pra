@@ -1,7 +1,6 @@
 package com.example.basic_board.controller;
 
 import com.example.basic_board.domain.entity.Board;
-import com.example.basic_board.domain.repository.BoardRepository;
 import com.example.basic_board.dto.*;
 import com.example.basic_board.exception.BoardNotFoundException;
 import com.example.basic_board.service.BoardService;
@@ -13,31 +12,32 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-// Swagger 어노테이션들
-// - @Tag               : 컨트롤러(그룹) 단위의 설명 - 화면에서 API를 묶는 큰 제목이 된다.
-// - @Operation         : 메서드(API 한개) 단위의 설명 - 요약(summary)/상세(description)
-// - @Parameter         : 파라미터 하나에 대한 설명
-// - @ApiResponse(s)    : 이 API가 낼 수 있는 응답(상태코드별)을 문서에 명시
-// - @Content / @Shcema : 응답/요청 본문의 "형태(어떤 DTO인지)"를 지정
+// * Swagger 어노테이션들
+// - @Tag                 : 컨트롤러(그룹) 단위의 설명 - 화면에서 API를 묶는 큰 제목이 된다.
+// - @Operation           : 메서드(API 한 개) 단위의 설명 - 요약(summary)/상세(description)
+// - @Parameter           : 파라미터 하나에 대한 설명
+// - @ApiResponse(s)      : 이 API가 낼 수 있는 응답(상태코드별)을 문서에 명시
+// - @Content / @Schema   : 응답/요청 본문의 "형태(어떤 DTO인지)"를 지정
 
 // * 뷰 컨트롤러(@Controller + 뷰 이름 반환)는 이 설정과 무관하게 원래 문서에 안 나온다.
 // - springdoc 은 @ResponseBody(= @RestController) 핸들러만 문서화 대상으로 삼기 때문이다.
 // -(BoardController/MemberController 는 "board-list" 같은 뷰 이름을 반환하므로 애초에 제외된다)
 
-@Tag(name = "게시글 API", description = "게시글 목록/상세 조회, 작성, 수정, 삭제, 첨부파일 다운로드")
+@Tag( name = "게시글 API", description = "게시글 목록/상세 조회, 작성, 수정, 삭제, 첨부파일 다운로드" )
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/boards")
@@ -45,7 +45,6 @@ public class BoardApiController {
 
     private final BoardService boardService;
     private final FileService fileService;
-    private final BoardRepository boardRepository;
 
     @Operation(
             summary = "게시글 목록 조회",
@@ -53,9 +52,9 @@ public class BoardApiController {
     )
     @GetMapping
     public BoardListResponseDto getBoardList(
-            @Parameter(description = "조회할 페이지 번호 (1부터 시작)", example = "1")
+            @Parameter( description = "조회할 페이지 번호 (1부터 시작)", example = "1" )
             @RequestParam(defaultValue = "1") int page,
-            @Parameter(description = "한 페이지에 담을 게시글 수", example = "10")
+            @Parameter( description = "한 페이지에 담을 게시글 수", example = "10" )
             @RequestParam(defaultValue = "10") int size
     ) {
         // 게시글 목록
@@ -86,11 +85,9 @@ public class BoardApiController {
     //       -> 덤으로 이 엔드포인트가 multipart 요청만 받도록 더 엄격/정확해진다 (JS 는 원래 multipart 로 보냄)
     //   (2) DTO 의 MultipartFile 필드에 @Schema(type="string", format="binary") 를 붙인다
     //       -> 그래야 그 칸이 "파일 선택" 버튼으로 렌더링된다 (BoardWriteRequestDto 참고)
-    @Operation(
-            summary = "게시글 작성",
-            description = "제목/내용/작성자와 (선택적) 첨부파일을 multipart/form-data 로 받아 새 게시글을 저장한다."
-    )
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "게시글 작성",
+            description = "제목/내용/작성자와 (선택적) 첨부파일을 multipart/form-data 로 받아 새 게시글을 저장한다.")
+    @PostMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
     public void saveBoard(@ModelAttribute BoardWriteRequestDto dto) {
         boardService.saveBoard(dto.getUserId(), dto.getTitle(), dto.getContent(), dto.getFile());
     }
@@ -107,20 +104,20 @@ public class BoardApiController {
     })
     @GetMapping("/{id}")
     public BoardDetailResponseDto getBoardDetail(
-            @Parameter(description = "조회할 게시글 id", example = "1")
+            @Parameter( description = "조회할 게시글 id", example = "1" )
             @PathVariable long id
     ) {
         Board boardDetail = boardService.getBoardDetail(id);
         return BoardDetailResponseDto.builder()
                 .title(boardDetail.getTitle())
                 .content(boardDetail.getContent())
-                .userId(boardDetail.getUserId())
                 .filePath(boardDetail.getFilePath())
                 .created(boardDetail.getCreated())
+                .userId(boardDetail.getUserId())
                 .build();
     }
 
-    // ResponseEntity는 HTTP 응답의 3가지를 직접 제어하게 해주는 상자이다.
+    // ResponseEntity는 HTTP응답의 3가지를 직접 제어하게 해주는 상자다
     // [상태코드] + [헤더] + [본문(body)]
     // 그냥 Resource만 리턴하면 파일 내용은 내려가지만,
     // Content-Disposition: attachment 헤더를 붙일 방법이 없다.
@@ -137,30 +134,30 @@ public class BoardApiController {
             @ApiResponse(responseCode = "404", description = "해당 이름의 파일이 없음",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
-    @GetMapping("/file/download/{filename}")
+    @GetMapping("/file/download/{fileName}")
     public ResponseEntity<Resource> downloadFile(
             @Parameter(description = "서버에 저장된 파일 이름(UUID 포함)", example = "3f2a1b_이력서.pdf")
-            @PathVariable String filename
+            @PathVariable String fileName
     ) {
-        Resource resource = fileService.downloadFile(filename);
+        Resource resource = fileService.downloadFile(fileName);
 
-        // 한글 파일명 인코딩
+        // * 한글 파일명 인코딩
         // HTTP 헤더 값에는 원칙적으로 ASCII만 안전하게 담을 수 있다.
-        // -> "이력서 홍길동.pdf"같은 한글/공백을 그대로 넣으면 깨지거나 잘린다.
+        // -> "이력서.pdf"같은 한글/공백을 그대로 넣으면 깨지거나 잘린다.
         // 그래서 파일명을 URL 인코딩해서 넣는다.
         //   - URLEncoder 는 공백을 '+' 로 바꾸는데, 파일명에선 '+' 가 그대로 보이면 곤란하므로 %20 으로 치환한다
         String encodedFileName = URLEncoder.encode(resource.getFilename(), StandardCharsets.UTF_8)
                 .replaceAll("\\+", "%20");
 
-        // .contentType(MediaType.APPLICATION_OCTET_STREAM) -> 힌트
-        // 무슨 파일인지 특정하지 않은 순수 바이너리라는 뜻
-        // 브라우저가 열 방법을 몰라 저장쪽으로 기울게 하는 '힌트'일 뿐, 다운로드 확정하진 못한다.
-        // (확장자 등에 따라 브라우저가 그냥 열어버릴 수도 있다.)
-        // .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
+        // * contentType(MediaType.APPLICATION_OCTET_STREAM) => 힌트
+        // 무슨 파일인지 특정하지 않은 순수 바이너리 라는 뜻
+        // 브라우저가 열 방법을 몰라 저장 쪽으로 기울게 하는 '힌트'일 뿐, 다운로드 확정하지 못한다.
+        // (확자자 등에 따라 브라우저가 그냥 열어버릴 수도 있다.)
+        // * .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
         // attachment는 인라인으로 열지말고 무조건 첨부(다운로드)하라는 확실한 지시
-        // filename*(별표)는 인코딩을 명시하는 최신 문법으로 "저장할 기본 파일명"을 정한다.
-        // 이게 없으면 URL 끝의 UUID 붙은 이름으로 저장돼 버린다. 그래서 원본 이름으로 저장되게 넣는 법
-        // utf-8 뒤 '' : 언어필드 (생략) ex) utf-8'ko'
+        // filename*(별표) 는 인코딩을 명시하는 최신 문법으로 "저장될 기본 파일명"을 정한다.
+        // 이게 없으면 URL 끝의 UUID 붙음 이름으로 저장돼 버린다. 그래서 원본 이름으로 저장되게 넣는 것
+        // utf8 뒤에 '' : 언어필드 생략 (ex utf8'ko')
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
@@ -173,8 +170,7 @@ public class BoardApiController {
     public void updateBoard(
             @Parameter(description = "수정할 게시글 id", example = "1")
             @PathVariable long id,
-            @ModelAttribute BoardUpdateRequestDto dto
-    ) {
+            @RequestBody BoardUpdateRequestDto dto) {
         boardService.updateBoard(id, dto);
     }
 
@@ -183,25 +179,29 @@ public class BoardApiController {
     @DeleteMapping("/{id}")
     public void deleteBoard(
             @Parameter(description = "삭제할 게시글 id", example = "1")
-            @PathVariable long id, @RequestBody BoardDeleteRequestDto dto
+            @PathVariable long id,
+            @RequestBody BoardDeleteRequestDto dto
     ) {
         boardService.deleteBoard(id, dto);
     }
 
-    // ============= [QueryDSL] =============
+    // ========== [QueryDSL] ==========
+
     @Operation(
-            summary = "게시글 검색",
+            summary = "게시글 검색(QueryDSL)",
             description = "제목/작성자/작성기간으로 동적 검색한다. 작성자 이름(member)과 댓글 수(comment)를 함께 내려준다."
     )
     @GetMapping("/search")
-    public void searchBoards(
+    public Page<BoardListItemResponseDto> searchBoards(
             @ModelAttribute BoardSearchRequestDto dto,
-            @Parameter(description = "조회할 페이지 번호 (1부터 시작)", example = "1")
+            @Parameter( description = "조회할 페이지 번호 (1부터 시작)", example = "1" )
             @RequestParam(defaultValue = "1") int page,
-            @Parameter(description = "한 페이지에 담을 게시글 수", example = "10")
+            @Parameter( description = "한 페이지에 담을 게시글 수", example = "10" )
             @RequestParam(defaultValue = "10") int size
     ) {
-
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return boardService.searchBoards(dto, pageable);
     }
+
 
 }

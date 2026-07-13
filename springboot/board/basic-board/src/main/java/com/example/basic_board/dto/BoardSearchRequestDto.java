@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -17,8 +17,8 @@ public class BoardSearchRequestDto {
     @Schema(description = "작성자 아이디 (정확한 일치)", example = "hong")
     private String userId;
     @Schema(description = "작성일 시작 (이 날짜 00:00부터)", example = "2026-01-01")
-    private LocalDateTime from;
+    private LocalDate from;
     @Schema(description = "작성일 끝 (이 날짜 23:59:59)", example = "2026-06-30")
-    private LocalDateTime to;
+    private LocalDate to;
 
 }

@@ -3,10 +3,12 @@ package com.example.basic_board.service;
 import com.example.basic_board.domain.entity.Board;
 import com.example.basic_board.domain.repository.BoardRepository;
 import com.example.basic_board.dto.BoardDeleteRequestDto;
+import com.example.basic_board.dto.BoardListItemResponseDto;
 import com.example.basic_board.dto.BoardSearchRequestDto;
 import com.example.basic_board.dto.BoardUpdateRequestDto;
 import com.example.basic_board.exception.BoardNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,14 +29,13 @@ public class BoardService {
 
     public List<Board> getBoardList(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").descending());
-
-        // findAll(pageable).getContent()의 getContent()란?
-        // findAll(pageable)의 반환 타입은 page<Board>
+        // * findAll(pageable).getContent()의 getContent()란?
+        // findAll(pageable)의 반환 타입은 Page<Board>다
         // Page가 제공하는 것들
         // - getContent() -> List<Board> : "이번 페이지의 게시글 목록"
         // - getTotalElements() -> long : 전체 게시글 수
         // - getTotalPages() -> int : 전체 페이지 수
-        // - isLast() -> 마지막 페이지 여부
+        // - isLast() -> boolean : 마지막 페이지 여부
         // 주의 : getContent()의 'content'는 Board 엔티티의 content가 아니다.
         return boardRepository.findAll(pageable).getContent();
     }
@@ -44,23 +45,24 @@ public class BoardService {
     }
 
     @Transactional
-    public void saveBoard(String userId, String title, String content, MultipartFile file) {    // 일관되게 dto로 하는게 좋음
+    public void saveBoard( String userId, String title, String content, MultipartFile file ) {
+
         String filePath = fileService.storeFile(file);
 
-        Board build = Board.builder()
-                .userId(userId)
-                .title(title)
-                .content(content)
-                .filePath(filePath)
-                .created(LocalDateTime.now())
-                .build();
-
-        boardRepository.save(build);
+        boardRepository.save(
+                Board.builder()
+                        .userId(userId)
+                        .title(title)
+                        .content(content)
+                        .filePath(filePath)
+                        .created(LocalDateTime.now())
+                        .build()
+        );
     }
 
     public Board getBoardDetail(long id) {
         return boardRepository.findById(id)
-                .orElseThrow(() -> new BoardNotFoundException("[BOARD] 게시글을 찾을 수 없습니다. id : " + id));
+                .orElseThrow( () -> new BoardNotFoundException("[BOARD] 게시글을 찾을 수 없습니다. id : " + id));
     }
 
     @Transactional
@@ -71,12 +73,12 @@ public class BoardService {
                 );
 
         String filePath = board.getFilePath();
-        if (dto.isFileFlag()) { // 파일 변경이 있었을 경우
-            fileService.deleteFile(filePath);   // 기존 파일 삭제
-            filePath = fileService.storeFile(dto.getFile());  // 새 파일 저장
+        if ( dto.isFileFlag() ) { // 파일 변경이 있었을 경우
+            fileService.deleteFile(filePath); // 기존 파일 삭제
+            filePath = fileService.storeFile(dto.getFile()); // 새 파일 저장
         }
 
-        board.update(dto.getTitle(), dto.getContent(), filePath);
+        board.update( dto.getTitle(), dto.getContent(), filePath );
     }
 
     @Transactional
@@ -90,7 +92,8 @@ public class BoardService {
         fileService.deleteFile(dto.getFilePath());
     }
 
-    public void searchBoards(BoardSearchRequestDto dto,  Pageable pageable) {
-
+    public Page<BoardListItemResponseDto> searchBoards(BoardSearchRequestDto dto, Pageable pageable) {
+        return boardRepository.searchBoards(dto, pageable);
     }
+
 }

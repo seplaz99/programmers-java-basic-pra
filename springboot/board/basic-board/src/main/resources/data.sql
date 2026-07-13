@@ -24,11 +24,13 @@ CREATE TABLE board (
 CREATE TABLE comment (
      id BIGINT AUTO_INCREMENT PRIMARY KEY,
      content TEXT NOT NULL,
-     user_id VARCHAR(30) NOT NULL,
+     user_id VARCHAR(50) NOT NULL,
      created DATETIME DEFAULT CURRENT_TIMESTAMP,
      board_id BIGINT NOT NULL,
      CONSTRAINT fk_comment_board FOREIGN KEY (board_id) REFERENCES board (id)
 );
+
+ALTER TABLE comment MODIFY user_id VARCHAR(50) NOT NULL;
 
 INSERT INTO member (user_id, password, user_name) VALUES
   ('hong', '1234', '홍길동'),
