@@ -3,6 +3,7 @@ package com.example.basic_board.service;
 import com.example.basic_board.domain.entity.Board;
 import com.example.basic_board.domain.repository.BoardRepository;
 import com.example.basic_board.dto.BoardDeleteRequestDto;
+import com.example.basic_board.dto.BoardSearchRequestDto;
 import com.example.basic_board.dto.BoardUpdateRequestDto;
 import com.example.basic_board.exception.BoardNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -87,5 +88,9 @@ public class BoardService {
 
         boardRepository.deleteById(id);
         fileService.deleteFile(dto.getFilePath());
+    }
+
+    public void searchBoards(BoardSearchRequestDto dto,  Pageable pageable) {
+        
     }
 }
