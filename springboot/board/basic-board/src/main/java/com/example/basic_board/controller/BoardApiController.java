@@ -187,6 +187,11 @@ public class BoardApiController {
 
     // ========== [QueryDSL] ==========
 
+    // * @ModelAttribute
+    // 검색 조건은 @ModelAttribute로 쿼리 파라미터로 받는다. (?title=...&userId=...&from=..&to=..)
+    // 반환은 Page<BoardListItemResponseDto> - content(목록) + totalElements/totalPages 등 페이징 정보가 함께 담긴다.
+    // (Page를 그대로 응답하면 스프링이 구조적 안정성 경고를 낼 수 있다.
+    // 실무에서 별도 응답 DTO로 감싸는 것을 권장한다.)
     @Operation(
             summary = "게시글 검색(QueryDSL)",
             description = "제목/작성자/작성기간으로 동적 검색한다. 작성자 이름(member)과 댓글 수(comment)를 함께 내려준다."
