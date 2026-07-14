@@ -118,6 +118,13 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     // ...
     // select * from comments where board_id = 100;
     // -> DB에는 총 101번의 쿼리가 나간다.
+
+    // 참고 : LAZY라서 생기는 문제는 아니다.
+    // - EAGER로 바꿔도 N + 1은 그대로이다. 추가 쿼리가 "순회할 때"가 아니라 "조회 직후"에 나갈 뿐이다.
+    // - 근본 원인은 "연관 데이터를 행마다 따로 가져오는 것" -> 해결법 fetch join
+
+    // - fetchJoin()을 붙이면, 게시글과 댓그을 "조인해서 한 방에" 가져와 이 문제를 없앤다.
+    // - .fetchJoin() : "조인한 comment를 board.comments에 즉시 채워라"는 지시
     @Override
     public Optional<Board> findWithComments(Long id) {
         Board result = queryFactory
