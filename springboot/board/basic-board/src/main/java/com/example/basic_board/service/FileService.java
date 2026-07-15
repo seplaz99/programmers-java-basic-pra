@@ -1,6 +1,7 @@
 package com.example.basic_board.service;
 
 import com.example.basic_board.exception.BoardNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -14,6 +15,7 @@ import java.nio.charset.MalformedInputException;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class FileService {
 
     @Value("${file.upload-dir}")
@@ -35,6 +37,8 @@ public class FileService {
             File dest = new File(dir, storedFileName);
 
             file.transferTo(dest);
+
+            log.info("파일 저장 : originalFileName = {}, storedFileName = {}", file.getOriginalFilename(), storedFileName);
 
             return dest.getPath();
         } catch (Exception e) {
@@ -67,6 +71,9 @@ public class FileService {
         File file = new File(filePath);
         if (!file.exists()) return;
 
-        file.delete();
+        boolean deleted = file.delete();
+        if (!deleted) {
+            log.warn("첨부파일 삭제 실패(디스크에 남음) : filePath = {}", filePath);
+        }
     }
 }

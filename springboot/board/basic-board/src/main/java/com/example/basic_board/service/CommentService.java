@@ -7,6 +7,7 @@ import com.example.basic_board.domain.repository.CommentRepository;
 import com.example.basic_board.dto.CommentWriteRequestDto;
 import com.example.basic_board.exception.BoardNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class CommentService {
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
@@ -32,5 +34,6 @@ public class CommentService {
                 .build();
 
         commentRepository.save(comment);
+        log.info("댓글 등록 : commentId = {}, boardId = {}, userId = {}", comment.getId(), boardId, dto.getUserId());
     }
 }
