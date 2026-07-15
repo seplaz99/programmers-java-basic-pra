@@ -102,4 +102,8 @@ public class BoardService {
                         () -> new BoardNotFoundException("게시글을 찾을 수 없습니다. id = " + id)
                 );
     }
+
+    public void getAuthorStats(long minCount) {
+
+    }
 }

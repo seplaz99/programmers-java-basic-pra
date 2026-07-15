@@ -4,6 +4,7 @@ import com.example.basic_board.domain.entity.Board;
 import com.example.basic_board.domain.entity.QBoard;
 import com.example.basic_board.domain.entity.QComment;
 import com.example.basic_board.domain.entity.QMember;
+import com.example.basic_board.dto.BoardAuthorStatsResponseDto;
 import com.example.basic_board.dto.BoardListItemResponseDto;
 import com.example.basic_board.dto.BoardSearchRequestDto;
 import com.querydsl.core.types.Expression;
@@ -134,6 +135,11 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .fetchOne();
 
         return Optional.ofNullable(result);
+    }
+
+    @Override
+    public List<BoardAuthorStatsResponseDto> countBoardsByAuthor(long minCout) {
+        return List.of();
     }
 
     // 제목 부분 일치 (Like %title%). 빈 값이면 조건 없음(null)
