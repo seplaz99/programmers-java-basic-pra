@@ -42,6 +42,17 @@ spring:
       hibernate:
         format_sql: true # 출력되는 SQL을 보기좋게 출력
 
+# logging.level - "어느 패키지의 로그를 어느 레벨부터 보여줄지"정하는 스위치
+# 패키지별로 다르게 줄 수 있다.
+# - root : 모든 로그의 기본값, 스프링 부트 기본이 info라서 보통 그대로 둔다.
+# - 우리 패키지만 debug로 낮추면, 스프링/하이버네이트 내부 로그는 조용한 채로
+# 우리가 심은 log.debug까지 보인다 -> 개발할 때 편함
+# - 운영 배포 시엔 우리 패키지도 info로 올린다.(debug는 양이 많아 디스크/성능에 부담)
+logging:
+  level:
+    roof: info
+    com.example.basic_board: debug
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
