@@ -25,5 +25,5 @@ public interface BoardRepositoryCustom {
 
     Optional<Board> findWithComments(Long id);
 
-    List<BoardAuthorStatsResponseDto> countBoardsByAuthor(long minCout)
+    List<BoardAuthorStatsResponseDto> countBoardsByAuthor(long minCout);
 }

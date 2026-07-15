@@ -2,10 +2,7 @@ package com.example.basic_board.service;
 
 import com.example.basic_board.domain.entity.Board;
 import com.example.basic_board.domain.repository.BoardRepository;
-import com.example.basic_board.dto.BoardDeleteRequestDto;
-import com.example.basic_board.dto.BoardListItemResponseDto;
-import com.example.basic_board.dto.BoardSearchRequestDto;
-import com.example.basic_board.dto.BoardUpdateRequestDto;
+import com.example.basic_board.dto.*;
 import com.example.basic_board.exception.BoardNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -103,7 +100,7 @@ public class BoardService {
                 );
     }
 
-    public void getAuthorStats(long minCount) {
-
+    public List<BoardAuthorStatsResponseDto> getAuthorStats(long minCount) {
+        return boardRepository.countBoardsByAuthor(minCount);
     }
 }

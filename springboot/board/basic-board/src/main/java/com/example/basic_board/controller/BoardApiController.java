@@ -231,10 +231,10 @@ public class BoardApiController {
     @Operation(summary = "작성자별 게시글 수 통계",
         description = "작성자별로 게시글 수를 집계하고(group by), minCount번 이상 쓴 작성자들(having) 중 많이 쓴 순으로 내려준다.")
     @GetMapping("/stats/authors")
-    public void getAuthor(
+    public List<BoardAuthorStatsResponseDto> getAuthor(
             @Parameter(description = "최소 게시글 수 (이 값 이상 쓴 작성자만)", example = "1")
             @RequestParam(defaultValue = "1") long minCount
     ) {
-
+        return boardService.getAuthorStats(minCount);
     }
 }
