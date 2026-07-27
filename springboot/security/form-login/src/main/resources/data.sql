@@ -1,5 +1,3 @@
-CREATE DATABASE form_login DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 -- user 테이블 생성
 CREATE TABLE user (
                       id BIGINT NOT NULL AUTO_INCREMENT,
