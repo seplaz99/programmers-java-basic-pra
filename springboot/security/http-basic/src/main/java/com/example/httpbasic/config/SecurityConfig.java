@@ -5,6 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 // * Spring Security의 동작 메커니즘
@@ -87,5 +94,34 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated() );
 
         return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+
+        UserDetails user = User.withUsername("user")
+                .password("1234")
+                .roles("USER")
+                .build();
+
+        manager.createUser(user);
+
+        return manager;
+    }
+
+    // BasicAuthenticationFilter
+    //   → AuthenticationManager (ProviderManager)
+    //        → DaoAuthenticationProvider   ← 지금 이 부분
+    //             ├─ UserDetailsService  (사용자 조회)
+    //             └─ PasswordEncoder     (비밀번호 대조)
+
+    // 이 Bean의 역할은 "인증할 때 사용자 정보를 어디서 가져올지"를 정의한다.
+    // AuthenticationManager가 아이디로 사용자를 조회할 때 바로 이 UserDetailService를 호출한다.
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
     }
 }
