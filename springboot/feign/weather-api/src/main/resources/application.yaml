@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: weather-api
-
-weather:
-  api:
-    key: fd037a67dd5ecdb1ff398a5f82d40c6135d3ac567685b5ef63e077a855bba6b9
