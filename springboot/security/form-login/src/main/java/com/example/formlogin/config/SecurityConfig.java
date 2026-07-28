@@ -81,10 +81,17 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                // 폼 로그인 설정 - UsernamePasswordAuthenticationFilter를 활성화하고 동작을 커스터마이징한다.
                 .formLogin(
                         form -> form
+                                // GET /users/login -> 우리가 만든 로그인 화면(login.html)
+                                // 지정하지 않으면 security가 기본 제공하는 /login페이지가 뜬다.
                                 .loginPage("/users/login")
+                                // POST /users/login -> 이 URL로 오는 로그인 제출을 UsernamePasswordAuthenticationFilter가 가로챈다.
+                                // 컨트롤러를 만들 필요가 없다. - 요청이 DispatcherServlet에 도달하기 전에 필터가 처리한다.
                                 .loginProcessingUrl("/users/login")
+                                // 필터가 요청 본문에서 아이디/비밀번호를 꺼낼 때 사용할 파라미터 이름
+                                // 기본값은 username/password인데, 우리 폼은 userID라는 이름으로 보내므로 맞춰준다.
                                 .usernameParameter("userId")
                                 .passwordParameter("password")
                                 // 인증 성공
