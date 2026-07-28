@@ -47,6 +47,9 @@ package com.example.formlogin.config;
 // SecurityContextHolder : 인증 결과 보관
 // AuthorizationManager : 접근 권환 판단
 
+import com.example.formlogin.config.security.CustomAuthenticationFailureHandler;
+import com.example.formlogin.config.security.CustomAuthenticationSuccessHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -57,8 +60,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
 
     @Bean
     public SecurityFilterChain filerChain(HttpSecurity http) throws Exception {
@@ -80,7 +88,9 @@ public class SecurityConfig {
                                 .usernameParameter("userId")
                                 .passwordParameter("password")
                                 // 인증 성공
+                                .successHandler(customAuthenticationSuccessHandler)
                                 // 인증 실패
+                                .failureHandler(customAuthenticationFailureHandler)
                                 .permitAll()
                 );
 
