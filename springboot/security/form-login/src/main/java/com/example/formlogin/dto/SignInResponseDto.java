@@ -12,4 +12,5 @@ public class SignInResponseDto {
     private String userName;
     private String userId;
     private String message;
+
 }
