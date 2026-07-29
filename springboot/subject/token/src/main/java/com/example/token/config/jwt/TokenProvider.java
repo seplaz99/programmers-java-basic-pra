@@ -1,6 +1,7 @@
 package com.example.token.config.jwt;
 
 import com.example.token.domain.entity.User;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -66,5 +67,19 @@ public class TokenProvider {
                 .claim(CLAIM_ROLE, user.getRole())
                 .signWith(secretKey, Jwts.SIG.HS512)
                 .compact();
+    }
+
+    public TokenStatus validateToken(String token) {
+        try {
+            jwtParser.parseSignedClaims(token);
+            log.debug("Token is valid");
+            return TokenStatus.VALID;
+        } catch (ExpiredJwtException e) {
+            log.warn("Token is expired");
+            return TokenStatus.EXPIRED;
+        } catch (Exception e) {
+            log.warn("Token is invalid");
+            return TokenStatus.INVALID;
+        }
     }
 }
