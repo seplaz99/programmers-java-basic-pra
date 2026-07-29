@@ -88,6 +88,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests( authorize -> authorize
                         .requestMatchers(
                                 "/users/join",
+                                "/api/users/join",
 
                                 "/css/**",
                                 "/js/**"

@@ -1,6 +1,8 @@
 package com.example.token.controller;
 
 import com.example.token.dto.SignUpRequestDto;
+import com.example.token.dto.SignUpResponseDto;
+import com.example.token.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,8 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserApiController {
 
+    private final UserService userService;
+
     @PostMapping("/join")
-    public void join(@RequestBody SignUpRequestDto requestDto) {
+    public SignUpResponseDto join(@RequestBody SignUpRequestDto requestDto) {
+        userService.signUp(requestDto);
+
+        return SignUpResponseDto.builder()
+                .url("/user/login")
+                .build();
 
     }
 }
