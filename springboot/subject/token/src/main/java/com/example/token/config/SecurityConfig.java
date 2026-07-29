@@ -23,11 +23,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 // 서명이 유효하면 그 주장들을 신뢰할 수 있다.
 
 // 클레임의 3가지 종류
-// 1) 등록된 클레임
-// 2) 공개 클레임
-// 3) 비공개 클레임
+// 1) 등록된 클레임(Registered) - RFC 7519 표준에 미리 정의된 이름들
+// sub(주체/사용자 식별자), iss(발급자), exp(만료시간), iat(발급 시각), aud(사용 대상), jti(토큰 고유 ID)
+// -> 이름이 3글자로 짧은 이유는 토큰 크기를 줄이기 위해
+// 2) 공개 클레임(Public) - 시스템 간 충돌하지 않도록 공개적으로 정의해서 쓰는 것
+// 보통 URI 형태로 이름을 짓는다. 직접 만들 일은 드룸
+// 3) 비공개 클레임(Private) - 서버-클라이언트 간 약속한 커스텀 데이터
+// 예 : role, nickname 등
 
 // 3. Signature
+// - 토큰이 위조되지 않았음을 증명하는 부분
+// - HMACSHA256( base64UrlEncode(header) + "." + base64UrlEncode(payload), secretKey)
+// - Payload를 조작하면 서명이 일치하지 않아 검증 단계에서 탐지된다.
+// - 즉 JWT는 '내용을 숨기는' 것이 아니라 '변조를 막는' 기술이다.
 
 @Configuration
 @EnableWebSecurity
