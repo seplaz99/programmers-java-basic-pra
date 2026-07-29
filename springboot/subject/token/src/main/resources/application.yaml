@@ -7,4 +7,19 @@ spring:
     username: root
     password: 1234
 
-# HSS12
+# HSS12 = HMAc-SHA-512. 비밀 키와 (헤더 + "." + 페이로드)를 함께 해시해서,
+# "키를 아는 쪽만 만들 수 있는 지문"을 서명으로 붙인다.
+# 검증 시 같은 계산을 다시 해서 서명과 비교하므로, 클레임을 한 글자라도 조작하면 INVALID가 된다.
+# HS256 vs HSS12 : 숫자는 해시 출력의 "비트 수"로, 같은 HMAC 구조에 꽂는 해시 함수가 다르다.
+# - HS256 : 서명 256비트(32바이트), 최소 키 32바이트
+# - HSS512 : 서명 512비트(64바이트), 최소 키 64바이트
+# 출력이 길수록 서명이 길어져 토큰이 커지는 대신 이론적 보안 마진이 크다
+# 둘 다 현재 기술로는 깨지지 않는 안전한 선태이며, 여기서는 더 보수적인 HSS512를 사용
+
+# openssl rand -base64 64 | tr -d '\n'
+jwt:
+  issuer: test@naver.com
+  secret key: KIzpd8wmCyekk6O5bevrh/HksQ+chdkYT0Yd2X5EP7X4PqSRMi/631PNsMmtp0+SxkBlzESGJ9c24c+BUadR5g==
+  access-token-validity: 2h
+  refresh-token-validity: 7d
+
