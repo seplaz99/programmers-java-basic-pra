@@ -37,6 +37,8 @@ public class UserService {
     }
 
     public SignInResponseDto login(SignInRequestDto requestDto) {
+        // form-login에서는 필터가 하던 아이디/비밀번호 검증을 직접 호출한다.
+        // 실패하면 AuthenticationException이 던져진다.
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(requestDto.getUserId(), requestDto.getPassword())
         );

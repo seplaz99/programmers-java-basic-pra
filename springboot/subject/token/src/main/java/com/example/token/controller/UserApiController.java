@@ -34,6 +34,7 @@ public class UserApiController {
             @RequestBody SignInRequestDto requestDto,
             HttpServletResponse response
     ) {
+        SignInResponseDto signInResponseDto = userService.login(requestDto);
         return null;
     }
 }
