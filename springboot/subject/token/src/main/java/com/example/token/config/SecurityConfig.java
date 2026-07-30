@@ -1,6 +1,7 @@
 package com.example.token.config;
 
 import com.example.token.config.filter.TokenAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +15,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.io.IOException;
 
 // * JWT(JSON Web Token)
 // JWT는 당사자 간에 정보를 JSON 객체로 안전하게 전달하기 위한 토큰 표준.
@@ -115,7 +120,14 @@ public class SecurityConfig {
                 // JWT필터를 UsernamePasswordAuthenticationFilter(폼로그인 필터) 자리 앞에 끼워 넣겠다.
                 // 인가 판단은 체인 맨 끝에서 일아나므로,
                 // 그 전에 토큰을 검증해 SecurityContext를 채워둬야 "인증된 요청"으로 취급된다.
-                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                // 인가 실패의 두 갈래
+                // - 401 (미인증) : 누군지 모름 -> authenticationEntryPoint
+                // - 403 (권한 부족) : 누군지는 알지만 자격 없음 -> accessDeniedHandler
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(accessDeniedHandler())
+                        .authenticationEntryPoint(authenticationEntryPoint())
+                );
 
         return http.build();
     }
@@ -141,4 +153,32 @@ public class SecurityConfig {
                 .build();
     }
 
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return ((request, response, accessDeniedException) -> {
+            if (request.getRequestURI().startsWith("/api")) {
+                sendError(response, HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다.");
+            } else {
+                response.sendRedirect("/access-denied");
+            }
+        });
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return ((request, response, authException) -> {
+            if (request.getRequestURI().startsWith("/api")) {
+                sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "인증이 필요합니다.");
+            } else {
+                response.sendRedirect("/access-denied");
+            }
+        });
+    }
+
+    private void sendError(HttpServletResponse response, int status, String message) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write( "status code : " + status + ", message : " + message);
+
+    }
 }
