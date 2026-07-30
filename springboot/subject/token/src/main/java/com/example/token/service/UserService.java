@@ -1,5 +1,7 @@
 package com.example.token.service;
 
+import com.example.token.config.jwt.TokenProvider;
+import com.example.token.config.security.CustomUserDetails;
 import com.example.token.domain.entity.User;
 import com.example.token.domain.repository.UserRepository;
 import com.example.token.dto.SignInRequestDto;
@@ -22,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
     public void signUp(SignUpRequestDto requestDto) {
         if (userRepository.existsByUserId(requestDto.getUserId())) {
@@ -38,6 +41,18 @@ public class UserService {
                 new UsernamePasswordAuthenticationToken(requestDto.getUserId(), requestDto.getPassword())
         );
 
-        return null;
+        User user = ((CustomUserDetails) authenticate.getPrincipal()).getUser();
+
+        TokenService.TokenPair tokenPair = tokenService.issueToken(user);
+
+        return SignInResponseDto.builder()
+                .isLoggedIn(true)
+                .url("/")
+                .userName(user.getName())
+                .userId(user.getUserId())
+                .accessToken(tokenPair.accessToken())
+                .refreshToken(tokenPair.refreshToken())
+                .message("로그인 성공")
+                .build();
     }
 }
