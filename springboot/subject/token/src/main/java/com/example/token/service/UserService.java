@@ -1,6 +1,5 @@
 package com.example.token.service;
 
-import com.example.token.config.jwt.TokenProvider;
 import com.example.token.config.security.CustomUserDetails;
 import com.example.token.domain.entity.User;
 import com.example.token.domain.repository.UserRepository;
@@ -8,6 +7,7 @@ import com.example.token.dto.SignInRequestDto;
 import com.example.token.dto.SignInResponseDto;
 import com.example.token.dto.SignUpRequestDto;
 import com.example.token.exception.DuplicateUserIdException;
+import com.example.token.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional( readOnly = true )
 public class UserService {
 
     private final UserRepository userRepository;
@@ -27,7 +27,8 @@ public class UserService {
     private final TokenService tokenService;
 
     public void signUp(SignUpRequestDto requestDto) {
-        if (userRepository.existsByUserId(requestDto.getUserId())) {
+
+        if ( userRepository.existsByUserId(requestDto.getUserId()) ) {
             throw new DuplicateUserIdException("[회원가입] 이미 사용중인 아이디입니다.");
         }
 
@@ -37,6 +38,7 @@ public class UserService {
     }
 
     public SignInResponseDto login(SignInRequestDto requestDto) {
+
         // form-login에서는 필터가 하던 아이디/비밀번호 검증을 직접 호출한다.
         // 실패하면 AuthenticationException이 던져진다.
         Authentication authenticate = authenticationManager.authenticate(
@@ -49,12 +51,14 @@ public class UserService {
 
         return SignInResponseDto.builder()
                 .isLoggedIn(true)
+                .message("로그인 성공")
                 .url("/")
-                .userName(user.getName())
-                .userId(user.getUserId())
                 .accessToken(tokenPair.accessToken())
                 .refreshToken(tokenPair.refreshToken())
-                .message("로그인 성공")
+                .userName(user.getName())
+                .userId(user.getUserId())
                 .build();
     }
+
+
 }

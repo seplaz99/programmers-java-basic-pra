@@ -60,8 +60,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 // - JWT : 상태를 토큰(클라이언트)에 저장, 무상태라 확장에 유리
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
@@ -97,16 +97,18 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/users/login",
                                 "/users/join",
+                                "/", // 페이지(HTML)는 공개, 데이터는 보호 - 브라우저 페이지 이동은 Bearer 헤더를 못 실으므로 페이지 인가는 API가 담당
                                 "/api/users/login",
                                 "/api/users/join",
+                                "/api/tokens/refresh",
 
                                 "/css/**",
                                 "/js/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                // JWT필터를 UsernamePasswordAuthenticationFilter(폼 로그인 필터) 자리 앞에 끼워 넣겠다.
-                // 인가 판단은 체인 맨 끝에서 일어나므로,
+                // JWT필터를 UsernamePasswordAuthenticationFilter(폼로그인 필터) 자리 앞에 끼워 넣겠다.
+                // 인가 판단은 체인 맨 끝에서 일아나므로,
                 // 그 전에 토큰을 검증해 SecurityContext를 채워둬야 "인증된 요청"으로 취급된다.
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -119,11 +121,12 @@ public class SecurityConfig {
     }
 
     // 아이디/비밀번호 검증의 진입점
-    // form-login에서는 필터가 내부적으로 호출했찌만,
-    // 토큰 방식에서는 UserService.login()이 직접 호출된다.
+    // form-login에서는 필터가 내부적으로 호출했지만,
+    // 토큰 방식에서는 UserSerivce.login()이 직접 호출한다.
     // authentication() -> DaoAuthenticationProvider -> UserDetailService.loadUserByUsername() -> 비밀번호 대조
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
 }

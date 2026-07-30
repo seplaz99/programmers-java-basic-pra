@@ -1,18 +1,15 @@
 package com.example.token.controller;
 
 import com.example.token.config.jwt.JwtProperties;
-import com.example.token.dto.SignInRequestDto;
-import com.example.token.dto.SignInResponseDto;
-import com.example.token.dto.SignUpRequestDto;
-import com.example.token.dto.SignUpResponseDto;
+import com.example.token.config.security.CustomUserDetails;
+import com.example.token.domain.entity.User;
+import com.example.token.dto.*;
 import com.example.token.service.UserService;
 import com.example.token.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,5 +46,17 @@ public class UserApiController {
         signInResponseDto.setAccessToken(null);
 
         return null;
+    }
+
+    @GetMapping("/info")
+    public UserInfoResponseDto getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+
+        return UserInfoResponseDto.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .username(user.getName())
+                .role(user.getRole())
+                .build();
     }
 }
