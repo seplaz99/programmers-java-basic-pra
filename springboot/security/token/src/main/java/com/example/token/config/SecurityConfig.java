@@ -113,7 +113,9 @@ public class SecurityConfig {
                                 "/api/tokens/refresh",
 
                                 "/css/**",
-                                "/js/**"
+                                "/js/**",
+                                "/access-denied",
+                                "/error"    // 404 등 에러 포워딩 경로. 막으면 인증 리다이렉트 루프가 생긴다.
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -121,10 +123,10 @@ public class SecurityConfig {
                 // 인가 판단은 체인 맨 끝에서 일아나므로,
                 // 그 전에 토큰을 검증해 SecurityContext를 채워둬야 "인증된 요청"으로 취급된다.
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                // 인가 실패의 두 갈래
+                // 인가 실패의 두 갈래:
                 // - 401 (미인증) : 누군지 모름 -> authenticationEntryPoint
                 // - 403 (권한 부족) : 누군지는 알지만 자격 없음 -> accessDeniedHandler
-                .exceptionHandling(exception -> exception
+                .exceptionHandling( exception -> exception
                         .accessDeniedHandler(accessDeniedHandler())
                         .authenticationEntryPoint(authenticationEntryPoint())
                 );
@@ -148,7 +150,7 @@ public class SecurityConfig {
 
     @Bean
     public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.withDefaultRolePrefix()    // "ROLE_" 접두사 자동 부착
+        return RoleHierarchyImpl.withDefaultRolePrefix() // "ROLE_" 접두사 자동 부착
                 .role("ADMIN").implies("USER")
                 .build();
     }
@@ -156,8 +158,8 @@ public class SecurityConfig {
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return ((request, response, accessDeniedException) -> {
-            if (request.getRequestURI().startsWith("/api")) {
-                sendError(response, HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다.");
+            if ( request.getRequestURI().startsWith("/api") ) {
+                sendError( response, HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다." );
             } else {
                 response.sendRedirect("/access-denied");
             }
@@ -167,8 +169,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return ((request, response, authException) -> {
-            if (request.getRequestURI().startsWith("/api")) {
-                sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "인증이 필요합니다.");
+            if ( request.getRequestURI().startsWith("/api") ) {
+                sendError( response, HttpServletResponse.SC_UNAUTHORIZED, "인증이 필요합니다." );
             } else {
                 response.sendRedirect("/access-denied");
             }
@@ -178,7 +180,7 @@ public class SecurityConfig {
     private void sendError(HttpServletResponse response, int status, String message) throws IOException {
         response.setStatus(status);
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write( "status code : " + status + ", message : " + message);
-
+        response.getWriter().write("status code : " + status + ", message : " + message);
     }
+
 }

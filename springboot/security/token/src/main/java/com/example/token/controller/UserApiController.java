@@ -26,7 +26,7 @@ public class UserApiController {
         userService.signUp(requestDto);
 
         return SignUpResponseDto.builder()
-                .url("/user/login")
+                .url("/users/login")
                 .build();
 
     }
@@ -58,7 +58,7 @@ public class UserApiController {
         CookieUtil.deleteCookie(request, response, CookieUtil.REFRESH_TOKEN_COOKIE);
         return LogoutResponseDto.builder()
                 .message("로그아웃 되었습니다.")
-                .url("/user/login")
+                .url("/users/login")
                 .build();
     }
 
@@ -69,7 +69,7 @@ public class UserApiController {
         return UserInfoResponseDto.builder()
                 .id(user.getId())
                 .userId(user.getUserId())
-                .username(user.getName())
+                .userName(user.getName())
                 .role(user.getRole())
                 .build();
     }

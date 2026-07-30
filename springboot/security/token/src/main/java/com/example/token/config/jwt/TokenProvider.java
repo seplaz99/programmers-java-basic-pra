@@ -20,7 +20,7 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 
-// 토큰 생성/검증/해석을 전담하는 컴포넌트
+// * 토큰 생성/검증/해석을 전담하는 컴포넌트
 // - generateToken : User 정보를 클레임에 담아 서명된 JWT 문자열 생성
 // - validateToken : 서명/만료 검증 결과를 TokenStatus로 반환
 // - getTokenDetails : 클레임을 도메인 User로 복원 (DB 조회 없이 토큰만으로)
@@ -28,8 +28,7 @@ import java.util.Date;
 
 // 서명 키(secretKey)는 서버만 알고 있다.
 // 따라서 "서명이 유효하다" = "이 서버가 발급했고 위조되지 않았다"가 성립하고,
-// 이것이 세션 없이도 사용자를 신뢰할 수 있는 근거이다.
-
+// 이것이 세션 없이도 사용자를 신뢰할 수 있는 근거다.
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -45,7 +44,7 @@ public class TokenProvider {
     private JwtParser jwtParser;
 
     @PostConstruct
-    public void init() {
+    private void init() {
         // 키와 파서는 불변이므로 요청마다 새로 만들지 않고 한 번만 생성해 재사용한다.
         this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperties.getSecretKey()));
         this.jwtParser = Jwts.parser().verifyWith(secretKey).build();
@@ -53,7 +52,6 @@ public class TokenProvider {
 
     public String generateToken(User user, Duration expiredAt) {
         Date now = new Date();
-
         return makeToken(
                 user,
                 new Date(now.getTime() + expiredAt.toMillis())
@@ -90,25 +88,28 @@ public class TokenProvider {
 
     public User getTokenDetails(String token) {
         Claims claims = getClaims(token);
-
         return User.builder()
-                .id(claims.get(CLAIM_ID,  Long.class))
-                .name(claims.get(CLAIM_NAME,  String.class))
-                .role(Role.valueOf(claims.get(CLAIM_ROLE, String.class)))
+                .id( claims.get(CLAIM_ID, Long.class) )
+                .userId( claims.getSubject() )
+                .name( claims.get(CLAIM_NAME, String.class) )
+                .role( Role.valueOf(claims.get(CLAIM_ROLE, String.class)) )
                 .build();
     }
 
     private Claims getClaims(String token) {
-        return jwtParser.parseSignedClaims(token).getPayload();
+        return jwtParser
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     // 복원된 User로 인증 정보를 만드는 메서드
     public Authentication getAuthentication(User user, String token) {
+
         CustomUserDetails principal = CustomUserDetails.builder()
                 .user(user)
                 .build();
 
         return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
-
     }
+
 }

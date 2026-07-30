@@ -7,7 +7,6 @@ import com.example.token.dto.SignInRequestDto;
 import com.example.token.dto.SignInResponseDto;
 import com.example.token.dto.SignUpRequestDto;
 import com.example.token.exception.DuplicateUserIdException;
-import com.example.token.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +25,7 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
+    @Transactional
     public void signUp(SignUpRequestDto requestDto) {
 
         if ( userRepository.existsByUserId(requestDto.getUserId()) ) {

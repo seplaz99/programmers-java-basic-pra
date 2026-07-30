@@ -10,6 +10,6 @@ public class UserInfoResponseDto {
 
     private long id;
     private String userId;
-    private String username;
+    private String userName;
     private Role role;
 }
