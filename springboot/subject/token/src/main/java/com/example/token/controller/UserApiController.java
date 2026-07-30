@@ -1,8 +1,11 @@
 package com.example.token.controller;
 
+import com.example.token.dto.SignInRequestDto;
+import com.example.token.dto.SignInResponseDto;
 import com.example.token.dto.SignUpRequestDto;
 import com.example.token.dto.SignUpResponseDto;
 import com.example.token.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,5 +27,13 @@ public class UserApiController {
                 .url("/user/login")
                 .build();
 
+    }
+
+    @PostMapping("/login")
+    public SignInResponseDto login(
+            @RequestBody SignInRequestDto requestDto,
+            HttpServletResponse response
+    ) {
+        return null;
     }
 }
