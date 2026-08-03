@@ -1,5 +1,6 @@
 package com.example.oauth2.domain.entity;
 
+import com.example.oauth2.config.oauth2.AuthProvider;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,4 +32,11 @@ public class User {
     @Builder.Default
     private Role role = Role.ROLE_USER;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    @Builder.Default
+    private AuthProvider provider = AuthProvider.LOCAL;
+
+    @Column(length = 100)
+    private String providerId;
 }
