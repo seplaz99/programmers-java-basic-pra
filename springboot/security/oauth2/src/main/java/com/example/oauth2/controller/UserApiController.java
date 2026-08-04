@@ -30,6 +30,24 @@ public class UserApiController {
                 .build();
     }
 
+    @PostMapping("/oauth-join")
+    public SignInResponseDto oauthJoin(
+            @RequestBody OAuthSignUpRequestDto requestDto,
+            HttpServletResponse response
+    ) {
+        SignInResponseDto signInResponseDto = userService.oauthSignUp(requestDto);
+
+        CookieUtil.addCookie(
+                response,
+                CookieUtil.REFRESH_TOKEN_COOKIE,
+                signInResponseDto.getRefreshToken(),
+                (int) jwtProperties.getRefreshTokenValidity().toSeconds()
+        );
+        signInResponseDto.setRefreshToken(null);
+
+        return signInResponseDto;
+    }
+
     @PostMapping("/login")
     public SignInResponseDto login(
             @RequestBody SignInRequestDto requestDto,

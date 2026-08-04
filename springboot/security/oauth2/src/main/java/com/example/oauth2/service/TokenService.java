@@ -5,6 +5,7 @@ import com.example.oauth2.config.jwt.TokenProvider;
 import com.example.oauth2.config.jwt.TokenStatus;
 import com.example.oauth2.domain.entity.User;
 import com.example.oauth2.dto.RefreshTokenResponseDto;
+import com.example.oauth2.dto.SignupPayloadDto;
 import com.example.oauth2.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,10 @@ public class TokenService {
         return RefreshTokenResponseDto.builder()
                 .validated(false)
                 .build();
+    }
+
+    public SignupPayloadDto getSignupPayload(String token) {
+        return tokenProvider.getSignupPayload(token);
     }
 
     private String getRefreshToken(Cookie[] cookies) {
