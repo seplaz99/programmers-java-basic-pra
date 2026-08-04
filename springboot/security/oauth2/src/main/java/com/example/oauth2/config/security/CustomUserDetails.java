@@ -11,17 +11,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-// CustomUserDetails를 만드는 이유
-// security의 인증 검증(DaoAuthenticationProvider)은 우리의 User엔티티를 모른다.
+// * CustomUserDetails를 만드는 이유
+// 시큐리티의 인증 검증(DaoAuthenticationProvider)은 우리의 User엔티티를 모른다.
 // 대신 UserDetails라는 "표준 인터페이스"로만 사용자 정보를 주고받는다.
 // - getUsername()/getPassword() -> 사용자ID/비밀번호 대조에 사용
 // - getAuthorities() -> 인가(권한 판단)에 사용
-// 즉 이 클래스는 우리 도메인(User 엔티티)과 security 사이의 "어댑터"이다.
+// 즉 이클래스는 우리 도메인(User 엔티티)과 시큐리티 사이의 "어댑터"다
 // UserDetailService.loadUserByUsername()이 DB에서 조회한 User를 이걸로 감싸서 반환하면,
-// 이후에 비밀번호 대조/권한 판단은 전부 이 객체를 통해 이루어진다.
+// 이후의 비밀번호 대조/권한 판단은 전부 이 객체를 통해 이루어진다.
 
 // 엔티티가 직접 UserDetails를 구현하게 할 수도 있지만(User implements UserDetails),
-// 그러면 도메인 엔티티가 security에 종속된다. 지금처럼 엔티티를 "감싸는" 방식이 도메인과 보안 관심사를 분리할 수 있어 더 낫다.
+// 그러면 도메인 엔티티가 시큐리티에 종속된다. 지금처럼 엔티티를 "감싸는" 방식이 도메인과 보안 관심사를 분리할 수 있어 더 낫다.
 
 @Getter
 @Builder
